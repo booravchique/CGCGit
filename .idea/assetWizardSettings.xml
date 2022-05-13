@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="lang_ic" />
-                            <entry key="sourceFile" value="C:\Users\vladv\Downloads\ic_sharp-language.svg" />
+                            <entry key="outputName" value="closebtn_ic" />
+                            <entry key="sourceFile" value="C:\Users\vladv\Downloads\codicon_chrome-close.svg" />
                           </map>
                         </option>
                       </PersistentState>

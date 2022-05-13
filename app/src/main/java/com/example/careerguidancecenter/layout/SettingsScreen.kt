@@ -61,6 +61,8 @@ fun SettingsHeader() {
         }
         constrain(backButton) {
             start.linkTo(parent.start)
+            top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
         }
     }
     ConstraintLayout(constraints, modifier = Modifier.fillMaxWidth()) {
@@ -74,6 +76,7 @@ fun SettingsHeader() {
             Icon(
                 painter = painterResource(id = R.drawable.back_arrow_ic),
                 contentDescription = null,
+                tint = MainGray
             )
         }
         Text(
