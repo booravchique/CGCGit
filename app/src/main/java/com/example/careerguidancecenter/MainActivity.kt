@@ -8,6 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.careerguidancecenter.layout.LevelTwoMainScreenLayout
 import com.example.careerguidancecenter.layout.SettingsScreenLayout
 import com.example.careerguidancecenter.ui.theme.CareerGuidanceCenterTheme
 
@@ -16,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CareerGuidanceCenterTheme {
-
+                LevelTwoMainScreenLayout()
             }
         }
     }
