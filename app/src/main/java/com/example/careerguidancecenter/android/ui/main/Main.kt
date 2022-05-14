@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,13 +15,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -28,17 +33,16 @@ import androidx.navigation.compose.composable
 import com.example.careerguidancecenter.android.R
 import androidx.navigation.compose.rememberNavController
 import com.example.careerguidancecenter.android.ui.Nav
-import com.example.careerguidancecenter.android.ui.questions.QuestionList
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.navArgument
-import com.example.careerguidancecenter.android.ui.core.LevelHint
-import com.example.careerguidancecenter.android.ui.core.LevelLoad
+import com.example.careerguidancecenter.android.ui.core.*
 import com.example.careerguidancecenter.android.ui.core.model.HintData
 import com.example.careerguidancecenter.android.ui.main.model.Level
 import com.example.careerguidancecenter.android.ui.setting.SettingsList
 import com.example.careerguidancecenter.android.ui.setting.model.SettingType
 import com.example.careerguidancecenter.android.ui.theme.*
 import kotlinx.coroutines.delay
+
 
 var Data = listOf(
     Level(
@@ -50,7 +54,8 @@ var Data = listOf(
             TextBtn = "НАЧАТЬ",
             BtnBorderColor = BorderOrange,
             BtnBackgroundColor = MainOrange,
-            FontSize = 28.sp
+            FontSize = 28.sp,
+            Link = Nav.QuestionLink.route
         ),
         LevelLabel = "Уровень 1",
         Name = "Мысли",
@@ -67,7 +72,8 @@ var Data = listOf(
             TextBtn = "НАЧАТЬ",
             BtnBorderColor = BorderBlue,
             BtnBackgroundColor = MainBlue,
-            FontSize = 32.sp
+            FontSize = 32.sp,
+            Link = Nav.ChoiceLink.route
         ),
         LevelLabel = "Уровень 2",
         Name = "Дела",
@@ -91,7 +97,7 @@ var Data = listOf(
 fun LevelsLayoutScreen() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Nav.Home.route){
+    NavHost(navController = navController, startDestination = Nav.Home.route) {
         composable(Nav.Home.route) {
             Column(
                 modifier = Modifier
@@ -107,15 +113,16 @@ fun LevelsLayoutScreen() {
             arguments = listOf(
                 navArgument(Nav.LevelsLoad.argument0) { type = NavType.IntType }
             )
-        ){backStackEntry ->
-            val levelId = backStackEntry.arguments?.getInt(Nav.LevelsLoad.argument0) ?: return@composable
-            val level = Data.filter{ it.Id == levelId }.first()
+        ) { backStackEntry ->
+            val levelId =
+                backStackEntry.arguments?.getInt(Nav.LevelsLoad.argument0) ?: return@composable
+            val level = Data.filter { it.Id == levelId }.first()
 
             LaunchedEffect(key1 = true) {
                 delay(3000L)
                 navController.navigate("${Nav.Levels.route}/${levelId}")
             }
-            
+
             LevelLoad(level = level)
         }
         composable(
@@ -124,33 +131,41 @@ fun LevelsLayoutScreen() {
                 navArgument(Nav.Levels.argument0) { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val levelId = backStackEntry.arguments?.getInt(Nav.Levels.argument0) ?: return@composable
-            val level = Data.filter{ it.Id == levelId }.first()
+            val levelId =
+                backStackEntry.arguments?.getInt(Nav.Levels.argument0) ?: return@composable
+            val level = Data.filter { it.Id == levelId }.first()
 
-            if(level.HintData != null){
-                LevelHint(level.HintData as HintData);
+            if (level.HintData != null) {
+                LevelHint(level.HintData as HintData, navController);
             }
         }
         composable(route = Nav.Settings.routeWithArgument,
             arguments = listOf(
                 navArgument(Nav.Settings.argument0) { type = NavType.IntType }
-            )) {backStackEntry ->
-            val settingId = backStackEntry.arguments?.getInt(Nav.Settings.argument0) ?: return@composable
+            )) { backStackEntry ->
+            val settingId =
+                backStackEntry.arguments?.getInt(Nav.Settings.argument0) ?: return@composable
 
             val settingEnum = SettingType.fromInt(settingId)
-            if(settingEnum == SettingType.Language){
+            if (settingEnum == SettingType.Language) {
 
-            }
-            else if(settingEnum == SettingType.Theme){
+            } else if (settingEnum == SettingType.Theme) {
 
             }
         }
         composable(Nav.Settings.route) {
             SettingsList(navController)
         }
-    }
+        composable(Nav.QuestionLink.route) {
+            LevelOneMainScreenLayout(navController)
+        }
 
+        composable(Nav.ChoiceLink.route) {
+            LevelTwoMainScreenLayout(navController)
+        }
+    }
 }
+
 
 @Composable
 fun LevelsHeader(

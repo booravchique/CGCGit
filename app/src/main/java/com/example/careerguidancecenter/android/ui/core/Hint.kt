@@ -15,11 +15,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.careerguidancecenter.android.ui.core.model.HintData
 import com.example.careerguidancecenter.android.ui.theme.*
 
 @Composable
-fun LevelHint(data: HintData) {
+fun LevelHint(
+    data: HintData,
+    navController: NavHostController
+) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -27,14 +33,17 @@ fun LevelHint(data: HintData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Hint(data)
+        Hint(data, navController)
     }
 }
 
 val shape = RoundedCornerShape(15.dp)
 
 @Composable
-private fun Hint(data: HintData) {
+private fun Hint(
+    data: HintData,
+    navController: NavHostController,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,7 +73,9 @@ private fun Hint(data: HintData) {
             DefaultButton(
                 textBtn = data.TextBtn,
                 btnBorderColor = data.BtnBorderColor,
-                btnBackgroundColor = data.BtnBackgroundColor
+                btnBackgroundColor = data.BtnBackgroundColor,
+                navController = navController,
+                link = data.Link
             )
         }
     }

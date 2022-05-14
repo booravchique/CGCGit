@@ -9,5 +9,6 @@ data class HintData(
     var TextBtn: String,
     var BtnBorderColor: Color,
     var BtnBackgroundColor: Color,
-    var FontSize: TextUnit
+    var FontSize: TextUnit,
+    var Link: String
 )
