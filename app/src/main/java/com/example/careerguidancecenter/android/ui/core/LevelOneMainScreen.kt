@@ -107,7 +107,7 @@ fun LevelOneMainScreenHeader() {
             onClick = {},
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
             elevation = ButtonDefaults.elevation(0.dp),
-
+            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
             ) {
             Icon(
                 painter = painterResource(id = R.drawable.closebtn_ic),

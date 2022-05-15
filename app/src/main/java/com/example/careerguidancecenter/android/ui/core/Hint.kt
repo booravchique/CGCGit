@@ -20,6 +20,8 @@ import androidx.navigation.NavHostController
 import com.example.careerguidancecenter.android.ui.core.model.HintData
 import com.example.careerguidancecenter.android.ui.theme.*
 
+
+
 @Composable
 fun LevelHint(
     data: HintData,
