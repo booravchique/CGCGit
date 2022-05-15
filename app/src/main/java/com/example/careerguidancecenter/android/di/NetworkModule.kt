@@ -2,6 +2,7 @@ package com.example.careerguidancecenter.android.di
 
 import android.content.Context
 import coil.util.CoilUtils
+import com.example.careerguidancecenter.android.network.ApiService
 import com.example.careerguidancecenter.android.network.AuthorizationService
 import com.example.careerguidancecenter.android.network.RequestInterceptor
 import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
@@ -46,9 +47,16 @@ object NetworkModule {
             .build()
     }
 
+
     @Provides
     @Singleton
-    fun provideAuthorizationService(okHttpClient: OkHttpClient): AuthorizationService {
-        return AuthorizationService(okHttpClient, "https://fm.tringle.org/api")
+    fun provideApiService(okHttpClient: OkHttpClient): ApiService {
+        return ApiService(okHttpClient, "https://fm.tringle.org/api")
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthorizationService(apiService: ApiService): AuthorizationService {
+        return AuthorizationService(apiService)
     }
 }

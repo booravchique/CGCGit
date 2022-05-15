@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.example.careerguidancecenter.android.network.AuthorizationService
 import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
+import com.example.careerguidancecenter.android.network.model.SignInInfo
 import com.example.careerguidancecenter.android.network.model.SignResult
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,4 +19,7 @@ class SignViewModel@Inject constructor(
         return authorizationService.SignUp(signUpInfo)
     }
 
+    fun SignIn(signInInfo: SignInInfo): ServiceResultGeneric<SignResult?> {
+        return authorizationService.SignIn(signInInfo)
+    }
 }

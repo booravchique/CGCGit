@@ -6,22 +6,28 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.careerguidancecenter.android.network.model.SignInInfo
+import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
+import com.example.careerguidancecenter.android.network.model.SignResult
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.theme.BackgroundFillGray
 
+
 @Composable
-fun SignIn(
+fun SignUp(
     navHostController: NavHostController,
     viewModel: SignViewModel
 ){
+    var fullName = remember { mutableStateOf("") }
     var email = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
 
@@ -40,6 +46,17 @@ fun SignIn(
         )
         {
             Column() {
+                OutlinedTextField(
+
+                    value =  fullName.value,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onValueChange = { fullName.value = it },
+                    label = { Text("ФИО") },
+                    singleLine = true
+
+                )
+
                 OutlinedTextField(
 
                     value =  email.value,
@@ -70,8 +87,9 @@ fun SignIn(
                         .fillMaxWidth()
                         .padding(bottom = 10.dp),
                     onClick = {
-                        var result = viewModel.SignIn(
-                            SignInInfo(
+                        var result = viewModel.SignUp(
+                            SignUpInfo(
+                                fullName.value,
                                 email.value,
                                 password.value
                             )
@@ -82,7 +100,7 @@ fun SignIn(
                         }
                     },
 
-                    )
+                )
                 {
                     Text("Отправить")
                 }

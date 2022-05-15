@@ -2,10 +2,8 @@ package com.example.careerguidancecenter.android.network
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.example.careerguidancecenter.android.network.model.ServiceError
-import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
-import com.example.careerguidancecenter.android.network.model.SignResult
-import com.example.careerguidancecenter.android.network.model.SignUpInfo
+import com.example.careerguidancecenter.android.Token
+import com.example.careerguidancecenter.android.network.model.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
@@ -15,41 +13,37 @@ import java.io.IOException
 import java.lang.reflect.Type
 
 class AuthorizationService constructor(
-    var okHttpClient: OkHttpClient,
-    var baseUrl: String
+    var apiService: ApiService,
 ) {
 
     fun SignUp(signUpInfo: SignUpInfo): ServiceResultGeneric<SignResult?>{
-        var gson = Gson()
-        var jsonString = gson.toJson(signUpInfo)
-        println(jsonString)
-        val request = Request.Builder()
-            .method("POST",
-                jsonString.toRequestBody("application/json".toMediaType()))
-            .url("${baseUrl}/Authorization/SignUp")
-            .build();
+        val gson = Gson()
+        var result = apiService.Send<SignUpInfo>("POST",
+            "Authorization/SignUp", signUpInfo)
+        println(result)
+        val type: Type = object :
+            TypeToken<ServiceResultGeneric<SignResult?>>() {}.type
+        var resultObject = gson.fromJson<ServiceResultGeneric<SignResult?>>(result, type)
+        if(resultObject.Value != null)
+            Token = resultObject.Value?.Token
 
-        var responseM: MutableState<Response?> = mutableStateOf(null)
+        return resultObject
+    }
 
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
+    fun SignIn(signInInfo: SignInInfo): ServiceResultGeneric<SignResult?>{
 
-                println("ERROR")
-            }
+        val gson = Gson()
+        val result =
+            apiService.Send("POST",
+            "Authorization/SignIn", signInInfo)
 
-            override fun onResponse(call: Call, response: Response) {
-                responseM.value = response
-            }
-        })
+        val type: Type = object :
+            TypeToken<ServiceResultGeneric<SignResult?>>() {}.type
+        var resultObject = gson.fromJson<ServiceResultGeneric<SignResult?>>(result, type)
 
-        while (true){
-            if(responseM.value != null){
-                val jsonInString = responseM.value?.body?.string()
-                println(jsonInString ?: "FFFFF NUUULL")
-                val type: Type = object : TypeToken<ServiceResultGeneric<SignResult?>>() {}.type
-                return gson.fromJson(jsonInString, type)
-            }
-            println("NNNN")
-        }
+        if(resultObject.Value != null)
+            Token = resultObject.Value?.Token
+
+        return resultObject
     }
 }

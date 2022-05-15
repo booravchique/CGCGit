@@ -4,6 +4,9 @@ import com.example.careerguidancecenter.android.ui.setting.model.SettingType
 
 sealed class Nav(val route: String) {
     object Home : Nav("Home")
+    object SignIn : Nav("SignIn")
+    object SignUp : Nav("SignUp")
+    object Start : Nav("Start")
 
     object Levels : Nav("Levels") {
 
