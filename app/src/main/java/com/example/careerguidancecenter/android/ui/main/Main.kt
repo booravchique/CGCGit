@@ -10,9 +10,15 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomEnd
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.layout.ContentScale.Companion.FillHeight
+import androidx.compose.ui.layout.ContentScale.Companion.Fit
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,10 +58,10 @@ var Data = listOf(
             Link = Nav.QuestionLink.route
         ),
         LevelLabel = "Уровень 1",
-        Name = "Мысли",
+        Name = "Самопознание",
         Background = MainCyan,
         BorderColor = BorderCyan,
-        Image = R.drawable.selfknowledge
+        Image = R.drawable.selfknowledge,
     ),
     Level(
         Id = 2,
@@ -70,19 +76,19 @@ var Data = listOf(
             Link = Nav.ChoiceLink.route
         ),
         LevelLabel = "Уровень 2",
-        Name = "Дела",
+        Name = "Таланты",
         Background = MainTurquoise,
         BorderColor = BorderTurquoise,
-        Image = R.drawable.talents
+        Image = R.drawable.talents,
     ),
     Level(
         Id = 3,
         HintData = null,
-        LevelLabel = "",
-        Name = "",
+        LevelLabel = "Уровень 3",
+        Name = "Профессии",
         Background = MainOrange,
         BorderColor = BorderOrange,
-        Image = R.drawable.level3image
+        Image = R.drawable.profs,
     ),
     Level(
         Id = 4,
@@ -91,7 +97,7 @@ var Data = listOf(
         Name = "Твой выбор",
         Background = MainLightRed,
         BorderColor = BorderLightRed,
-        Image = R.drawable.yourchoice
+        Image = R.drawable.yourchoice,
     ),
 )
 
@@ -202,7 +208,7 @@ fun LevelsHeader(
 @Composable
 fun Preview() {
     val navController = rememberNavController()
-    Column(){
+    Column() {
         Column(
             modifier = Modifier.padding(bottom = 16.dp)
         ) {
@@ -246,6 +252,7 @@ fun LevelsSection(
                         modifier = Modifier,
                         horizontalAlignment = Alignment.Start,
                     ) {
+
                         Text(
                             modifier = Modifier
                                 .padding(start = 14.dp, top = 8.dp),
@@ -262,8 +269,9 @@ fun LevelsSection(
                             color = Color.White,
                             fontFamily = RalewayFontFamily,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp,  //создать тайпографи
+                            fontSize = 20.sp,  //создать тайпографи
                         )
+
                     }
                     Box(
                         modifier = Modifier.height(200.dp)
@@ -272,9 +280,9 @@ fun LevelsSection(
                             painter = painterResource(level[it].Image),
                             contentDescription = null,
                             modifier = Modifier
-                                .padding(top = 40.dp)
-                                .fillMaxSize(),
-                            contentScale = ContentScale.FillHeight,
+                                .fillMaxSize()
+                                .padding(top = 40.dp),
+                            contentScale = FillHeight,
                             alignment = Alignment.BottomEnd,
                         )
                     }
