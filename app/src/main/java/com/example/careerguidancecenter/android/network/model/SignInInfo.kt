@@ -1,6 +1,8 @@
 package com.example.careerguidancecenter.android.network.model
 
 data class SignInInfo (
-    var Email: String,
-    var Password: String,
+    var email: String,
+    var fullname: String,
+    var password: String,
+    var confirmpassword: String,
 )
