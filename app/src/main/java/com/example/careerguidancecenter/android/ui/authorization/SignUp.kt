@@ -31,13 +31,15 @@ import androidx.navigation.NavHostController
 import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
 import com.example.careerguidancecenter.android.network.model.SignResult
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
+import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.theme.*
+import dagger.hilt.android.AndroidEntryPoint
 
 @Composable
 fun SignUp(
     navHostController: NavHostController,
-    viewModel: SignViewModel
+    viewModel: SignUpViewModel
 ) {
     val shape = RoundedCornerShape(10.dp)
 
@@ -79,7 +81,7 @@ fun SignUp(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = "ВХОД",
+                    text = "РЕГИСТРАЦИЯ",
                     color = DarkTextColor,
                     fontFamily = RalewayFontFamily,
                     fontWeight = FontWeight.Bold,
@@ -116,19 +118,21 @@ fun SignUp(
                         backgroundColor = White
                     )
                 )
+
                 OutlinedButton(
                     modifier = Modifier
                         .padding(top = 30.dp),
                     onClick = {
-                        var result = viewModel.SignUp(
-                            SignUpInfo(
-                                fullName.value,
-                                password.value,
-                            )
-                        )
-                        if (result.Success) {
-                            navHostController.navigate(Nav.Home.route)
-                        }
+                        val login = fullName.value
+                        val password = password.value
+
+                        val hashMap:HashMap<String, String> = hashMapOf()
+                        hashMap.put("fullName", login)
+                        hashMap.put("password", password)
+                        hashMap.put("name", password)
+                        viewModel.signUp(hashMap)
+
+                        navHostController.navigate(Nav.Home.route)
                     },
                     shape = shape,
                     colors = ButtonDefaults.outlinedButtonColors(

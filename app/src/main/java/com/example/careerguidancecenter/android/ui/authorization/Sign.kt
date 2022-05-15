@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.careerguidancecenter.android.Token
+import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.main.LevelsLayoutScreen
 import com.example.careerguidancecenter.android.ui.theme.BackgroundFillGray
@@ -103,10 +104,10 @@ fun Sign(){
             LevelsLayoutScreen()
         }
         composable(Nav.SignUp.route){
-            SignUp(navController, viewModel)
+            SignUp(navController, viewModel())
         }
         composable(Nav.SignIn.route){
-            SignIn(navController, viewModel)
+            SignIn(navController, viewModel())
         }
 
     }

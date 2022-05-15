@@ -61,7 +61,7 @@ var Data = listOf(
         Name = "Самопознание",
         Background = MainCyan,
         BorderColor = BorderCyan,
-        Image = R.drawable.selfknowledge,
+        Image = R.drawable.ic_level1img,
     ),
     Level(
         Id = 2,
@@ -79,7 +79,7 @@ var Data = listOf(
         Name = "Таланты",
         Background = MainTurquoise,
         BorderColor = BorderTurquoise,
-        Image = R.drawable.talents,
+        Image = R.drawable.ic_level2img,
     ),
     Level(
         Id = 3,
@@ -88,7 +88,7 @@ var Data = listOf(
         Name = "Профессии",
         Background = MainOrange,
         BorderColor = BorderOrange,
-        Image = R.drawable.profs,
+        Image = R.drawable.ic_level3img,
     ),
     Level(
         Id = 4,
@@ -97,7 +97,7 @@ var Data = listOf(
         Name = "Твой выбор",
         Background = MainLightRed,
         BorderColor = BorderLightRed,
-        Image = R.drawable.yourchoice,
+        Image = R.drawable.ic_level4img,
     ),
 )
 
@@ -166,7 +166,7 @@ fun LevelsLayoutScreen() {
             SettingsList(navController)
         }
         composable(Nav.QuestionLink.route) {
-            LevelOneMainScreenLayout(navController)
+            LevelOneMainScreenLayout(/*navController*/)
         }
 
         composable(Nav.ChoiceLink.route) {

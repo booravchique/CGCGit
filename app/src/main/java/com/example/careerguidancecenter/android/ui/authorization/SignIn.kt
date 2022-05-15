@@ -22,13 +22,14 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavHostController
 import com.example.careerguidancecenter.android.network.model.SignInInfo
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
+import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.theme.*
 
 @Composable
 fun SignIn(
     navHostController: NavHostController,
-    viewModel: SignViewModel
+    viewModel: SignUpViewModel
 ){
     val shape = RoundedCornerShape(10.dp)
 
@@ -143,17 +144,8 @@ fun SignIn(
                     modifier = Modifier
                         .padding(top = 30.dp),
                     onClick = {
-                        var result = viewModel.SignIn(
-                            SignInInfo(
-                                fullname.value,
-                                email.value,
-                                password.value,
-                                confirmpassword.value
-                            )
-                        )
-                        if (result.Success) {
                             navHostController.navigate(Nav.Home.route)
-                        }
+
                     },
                     shape = shape,
                     colors = ButtonDefaults.outlinedButtonColors(
