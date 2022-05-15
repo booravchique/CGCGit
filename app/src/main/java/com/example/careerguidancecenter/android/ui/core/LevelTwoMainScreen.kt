@@ -35,6 +35,7 @@ import com.example.careerguidancecenter.android.ui.theme.*
 fun LevelTwoMainScreenLayout(
     navController: NavHostController
 ) {
+    var count: Int = Questions()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,8 +52,6 @@ fun LevelTwoMainScreenLayout(
 fun LevelTwoMainScreenHeader(
 
 ) {
-
-
     val constraints = ConstraintSet {
         val closeBtn = createRefFor("closeBtn")
         val restartBtn = createRefFor("restartBtn")
@@ -65,7 +64,10 @@ fun LevelTwoMainScreenHeader(
         }
 
         constrain(counting) {
-
+            start.linkTo(parent.start)
+            top.linkTo(parent.top)
+            bottom.linkTo(parent.bottom)
+            end.linkTo(parent.end)
         }
 
         constrain(closeBtn) {
@@ -75,6 +77,7 @@ fun LevelTwoMainScreenHeader(
         }
 
     }
+
     ConstraintLayout(
         constraints,
         modifier = Modifier
@@ -101,7 +104,15 @@ fun LevelTwoMainScreenHeader(
                 tint = MainGray
             )
         }
-        Text(text = "Выбрано 5/$count")
+        Text(
+            modifier = Modifier
+                .layoutId("counting"),
+            text = "Выбрано 5/5",
+            fontFamily = RalewayFontFamily,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = DarkTextColor
+        )
         Button(
             modifier = Modifier.layoutId("closeBtn"),
             onClick = {},
@@ -115,13 +126,12 @@ fun LevelTwoMainScreenHeader(
                 tint = MainGray
             )
         }
+
     }
 }
 
 @Composable
-fun Questions(
-    count: Int
-): Int {
+fun Questions(): Int {
 
     var items by remember {
         mutableStateOf(
@@ -158,7 +168,7 @@ fun Questions(
                             } else item
                         }
 
-
+                        Log.d("asd", "count: $count")
                     },
 
                 ) {
@@ -182,5 +192,4 @@ fun Questions(
     }
     count = items.count {it.isSelected}
     return count
-    Log.d("asd", "Count: $count")
 }
