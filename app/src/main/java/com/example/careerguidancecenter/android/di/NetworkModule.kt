@@ -3,7 +3,13 @@ package com.example.careerguidancecenter.android.di
 import com.example.careerguidancecenter.android.data.network.ApiServ
 import com.example.careerguidancecenter.android.data.network.NetworkApiStorage
 import com.example.careerguidancecenter.android.data.network.NetworkStorage
+import com.example.careerguidancecenter.android.data.repository.AnswerRepositoryImpl
+import com.example.careerguidancecenter.android.data.repository.QuestionsRepositoryImpl
+import com.example.careerguidancecenter.android.data.repository.SignInRepositoryImpl
 import com.example.careerguidancecenter.android.data.repository.SignUpRepositoryImpl
+import com.example.careerguidancecenter.android.domain.repository.AnswerRepository
+import com.example.careerguidancecenter.android.domain.repository.QuestionsRepository
+import com.example.careerguidancecenter.android.domain.repository.SignInRepository
 import com.example.careerguidancecenter.android.domain.repository.SignUpRepository
 import com.example.careerguidancecenter.android.network.ApiService
 import com.example.careerguidancecenter.android.network.AuthorizationService
@@ -78,11 +84,25 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideSignIn(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher): SignUpRepository {
+    fun provideSignUp(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher): SignUpRepository {
         return SignUpRepositoryImpl(networkStorage,gson,dispatcher)
     }
+    @Provides
+    @Singleton
+    fun provideSignIn(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher): SignInRepository {
+        return SignInRepositoryImpl(networkStorage,gson,dispatcher)
+    }
 
-
+    @Provides
+    @Singleton
+    fun provideGetQuestions(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):QuestionsRepository{
+        return QuestionsRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+    @Provides
+    @Singleton
+    fun providePostAnswer(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):AnswerRepository{
+        return AnswerRepositoryImpl(networkStorage,gson,dispatcher)
+    }
     @Provides
     @Singleton
     fun provideApiService(okHttpClient: OkHttpClient): ApiService {
@@ -94,6 +114,7 @@ object NetworkModule {
     fun provideAuthorizationService(apiService: ApiService): AuthorizationService {
         return AuthorizationService(apiService)
     }
+
 }
 
 @Retention(AnnotationRetention.BINARY)

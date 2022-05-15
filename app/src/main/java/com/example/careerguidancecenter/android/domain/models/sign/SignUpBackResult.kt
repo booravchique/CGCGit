@@ -1,4 +1,4 @@
-package com.example.careerguidancecenter.android.domain.models
+package com.example.careerguidancecenter.android.domain.models.sign
 
 data class SignUpBackResult(
     val errors: List<Any>,
