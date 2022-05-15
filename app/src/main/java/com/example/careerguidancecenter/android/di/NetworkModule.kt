@@ -10,7 +10,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -31,10 +35,11 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(
-                "https://fm.tringle.org/api"
+                "https://fm.tringle.org/api/"
             )
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
@@ -43,7 +48,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthorizationService(retrofit: Retrofit): AuthorizationService {
-        return retrofit.create(AuthorizationService::class.java)
+    fun provideAuthorizationService(okHttpClient: OkHttpClient): AuthorizationService {
+        return AuthorizationService(okHttpClient, "https://fm.tringle.org/api")
     }
 }

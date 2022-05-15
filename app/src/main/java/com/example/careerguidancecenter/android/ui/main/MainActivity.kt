@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import com.example.careerguidancecenter.android.ui.authorization.SignIn
 import com.example.careerguidancecenter.android.ui.root.RootViewModel
 import com.example.careerguidancecenter.android.ui.theme.CareerGuidanceCenterTheme
 import com.skydoves.landscapist.coil.LocalCoilImageLoader
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
                 CareerGuidanceCenterTheme {
 
-                    LevelsLayoutScreen()
+                    SignIn()
                 }
             }
         }
