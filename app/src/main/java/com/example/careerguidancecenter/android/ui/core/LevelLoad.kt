@@ -20,11 +20,7 @@ import com.example.careerguidancecenter.android.ui.main.model.Level
 import com.example.careerguidancecenter.android.ui.theme.MainOrange
 import com.example.careerguidancecenter.android.ui.theme.RalewayFontFamily
 
-@Preview
-@Composable
-fun Preview() {
-    LevelLoad(Data[1])
-}
+
 
 @Composable
 fun LevelLoad(level:Level) {

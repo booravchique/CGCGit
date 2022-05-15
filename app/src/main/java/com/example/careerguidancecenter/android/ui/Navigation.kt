@@ -32,4 +32,6 @@ sealed class Nav(val route: String) {
 
     object ChoiceLink : Nav("ChoiceLink")
 
+    object ProfessionsLink : Nav("ProfessionsLink")
+
 }

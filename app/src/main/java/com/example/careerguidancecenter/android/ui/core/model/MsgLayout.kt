@@ -36,7 +36,8 @@ fun Messages(
 ) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = 60.dp, start = 8.dp, end = 8.dp),
     ) {
         items(msgInc.size) {
             val msg = msgInc[it].content
@@ -92,9 +93,9 @@ fun OutgoingMsgLayout(
     ) {
         Box(
             modifier = Modifier
-                .border(2.dp, BorderOrange, shape = outgoingMsgShape)
+                .border(2.dp, BorderCyan, shape = outgoingMsgShape)
                 .clip(outgoingMsgShape)
-                .background(MainOrange)
+                .background(MainCyan)
         ) {
             Text(
                 modifier = Modifier

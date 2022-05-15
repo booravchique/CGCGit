@@ -126,7 +126,6 @@ fun LevelTwoMainScreenHeader(
                 tint = MainGray
             )
         }
-
     }
 }
 
@@ -155,11 +154,11 @@ fun Questions(): Int {
                     .padding(vertical = 8.dp)
                     .border(
                         2.dp,
-                        if (items[i].isSelected) BorderBlue else BackgroundFillGray,
+                        if (items[i].isSelected) BorderTurquoise else BorderGray,
                         shape = shape
                     )
                     .clip(shape)
-                    .background(if (items[i].isSelected) MainBlue else Color.White)
+                    .background(if (items[i].isSelected) MainTurquoise else Color.White)
                     .clickable {
                         items = items.mapIndexed { j, item ->
                             if (i == j) {
