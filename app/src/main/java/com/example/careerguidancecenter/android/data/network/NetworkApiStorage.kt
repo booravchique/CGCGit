@@ -1,6 +1,7 @@
 package com.example.careerguidancecenter.android.data.network
 
 import com.example.careerguidancecenter.android.domain.models.answer.Answers
+import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.domain.models.questions.Questions
 import com.google.gson.Gson
@@ -21,6 +22,10 @@ class NetworkApiStorage(private val retrofit: ApiServ,private val gson: Gson): N
 
     override suspend fun answers(hashMap: HashMap<String, Any>, token: String): Answers {
         return retrofit.postAnswer(hashMap=hashMap,token = token)
+    }
+
+    override suspend fun getMyAnswers(token: String): GetMyAnswers {
+        return retrofit.getMyAnswers(token = token)
     }
 
 }

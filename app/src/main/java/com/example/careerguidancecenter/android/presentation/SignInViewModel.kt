@@ -6,11 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.careerguidancecenter.android.common.Resource
-import com.example.careerguidancecenter.android.domain.usecases.AnswerUseCase
-import com.example.careerguidancecenter.android.domain.usecases.QuestionsUseCase
-import com.example.careerguidancecenter.android.domain.usecases.SIgnInUseCase
-import com.example.careerguidancecenter.android.domain.usecases.SIgnUpUseCase
+import com.example.careerguidancecenter.android.domain.usecases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,11 +16,15 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val signInUseCase: SIgnInUseCase,
     private val quest:QuestionsUseCase,
-    private val ans:AnswerUseCase
+    private val ans:AnswerUseCase,
+    private val getMyAnswersUseCase: GetMyAnswersUseCase
 ) :ViewModel() {
 
 
-
+     val result1 = MutableLiveData<String>()
+     val result2 = MutableLiveData<String>()
+     val result3 = MutableLiveData<String>()
+    val result4 = MutableLiveData<String>()
     private var _errorLiveData = MutableLiveData<String>()
     var errorLiveData: LiveData<String> = _errorLiveData
 
@@ -36,6 +38,7 @@ class SignInViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
+                    result1.value = result.data?.value.toString()
                 }
             }
         }
@@ -50,6 +53,7 @@ class SignInViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
+                    result2.value = result.data?.value.toString()
                 }
             }
         }
@@ -64,6 +68,22 @@ class SignInViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
+                    result3.value = result.data?.success.toString()
+                }
+            }
+        }
+    }
+    fun getans(token:String){
+        viewModelScope.launch {
+            val result = getMyAnswersUseCase.execute(token)
+            when(result){
+                is Resource.Error -> {
+                    _errorLiveData.value = result.message!!
+                    Log.i("LiveDataError", result.message)
+                }
+                is Resource.Success -> {
+                    Log.d("Result", result.data.toString())
+                    result4.value = result.data?.toString()
                 }
             }
         }

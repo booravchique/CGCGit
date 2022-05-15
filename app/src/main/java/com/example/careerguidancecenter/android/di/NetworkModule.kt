@@ -3,14 +3,8 @@ package com.example.careerguidancecenter.android.di
 import com.example.careerguidancecenter.android.data.network.ApiServ
 import com.example.careerguidancecenter.android.data.network.NetworkApiStorage
 import com.example.careerguidancecenter.android.data.network.NetworkStorage
-import com.example.careerguidancecenter.android.data.repository.AnswerRepositoryImpl
-import com.example.careerguidancecenter.android.data.repository.QuestionsRepositoryImpl
-import com.example.careerguidancecenter.android.data.repository.SignInRepositoryImpl
-import com.example.careerguidancecenter.android.data.repository.SignUpRepositoryImpl
-import com.example.careerguidancecenter.android.domain.repository.AnswerRepository
-import com.example.careerguidancecenter.android.domain.repository.QuestionsRepository
-import com.example.careerguidancecenter.android.domain.repository.SignInRepository
-import com.example.careerguidancecenter.android.domain.repository.SignUpRepository
+import com.example.careerguidancecenter.android.data.repository.*
+import com.example.careerguidancecenter.android.domain.repository.*
 import com.example.careerguidancecenter.android.network.ApiService
 import com.example.careerguidancecenter.android.network.AuthorizationService
 import com.google.gson.Gson
@@ -102,6 +96,12 @@ object NetworkModule {
     @Singleton
     fun providePostAnswer(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):AnswerRepository{
         return AnswerRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetMyAnswer(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):GetMyAnswersRepository{
+        return GetMyAnswersRepositoryImpl(networkStorage,gson,dispatcher)
     }
     @Provides
     @Singleton

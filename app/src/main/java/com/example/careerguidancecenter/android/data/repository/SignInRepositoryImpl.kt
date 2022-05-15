@@ -19,7 +19,7 @@ class SignInRepositoryImpl
     override suspend fun signInRep(hashMap: HashMap<String, String>): Resource<SignUpBackResult> {
         return withContext(dispatcher) {
             try {
-                val result = storage.signUpClient(hashMap = hashMap)
+                val result = storage.signInClient(hashMap = hashMap)
                 if (result.httpStatusCode == 200) {
                     Resource.Success(result)
                 } else {
