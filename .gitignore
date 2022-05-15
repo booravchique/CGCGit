@@ -31,3 +31,12 @@ google-services.json
 
 # Android Profiling
 *.hprof
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.idea/modules.xml
+local.properties
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.idea/modules.xml
+local.properties
+.gradle/buildOutputCleanup/buildOutputCleanup.lock

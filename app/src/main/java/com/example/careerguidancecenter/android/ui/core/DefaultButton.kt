@@ -13,16 +13,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.careerguidancecenter.android.ui.theme.RalewayFontFamily
 
 @Composable
 fun DefaultButton(
     textBtn: String,
     btnBorderColor: Color,
-    btnBackgroundColor: Color
+    btnBackgroundColor: Color,
+    navController: NavHostController,
+    link: String
+
 ) {
     OutlinedButton(
-        onClick = {},
+        onClick = {
+                  navController.navigate(link)
+        },
         shape = shape,
         modifier = Modifier
             .fillMaxWidth()

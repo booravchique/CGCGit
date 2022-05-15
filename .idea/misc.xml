@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/CareerGuidanceCenter.Android/app/src/main/res/drawable-v24/closebtn_ic.xml" value="0.1" />
+        <entry key="..\:/CareerGuidanceCenter.Android/app/src/main/res/drawable-v24/restartbtn_ic.xml" value="0.1" />
         <entry key="..\:/Users/jackf/AndroidStudioProjects/CareerGuidanceCenter.Android/app/src/main/res/drawable/sun_ic.xml" value="0.113" />
       </map>
     </option>

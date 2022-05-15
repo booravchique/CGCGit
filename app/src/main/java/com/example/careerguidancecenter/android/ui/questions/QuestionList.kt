@@ -13,15 +13,15 @@ import com.example.careerguidancecenter.android.ui.theme.BorderBlue
 import com.example.careerguidancecenter.android.ui.theme.BorderOrange
 
 
-@Composable
-fun QuestionList(viewModel:QuestionListViewModel) {
-    LevelHint(data = HintData(
-        Id = 1,
-        Text = "Внимательно прочитайте вопросы и ответьте на них. Отвечайте честно, используя глаголы сделать, создать, разработать и т.д. " +
-                "Ответив на последний вопрос, еще раз внимательно прочитайте вопросы и ваши ответы. Найдите закономерности и сделайте обобщение, какие дела, настоящие и будущие вас захватывают?",
-        TextBtn = "НАЧАТЬ",
-        BtnBorderColor = BorderOrange,
-        BtnBackgroundColor = BorderBlue,
-        FontSize = 28.sp
-    ))
-}
+//@Composable
+//fun QuestionList(viewModel:QuestionListViewModel) {
+//    LevelHint(data = HintData(
+//        Id = 1,
+//        Text = "Внимательно прочитайте вопросы и ответьте на них. Отвечайте честно, используя глаголы сделать, создать, разработать и т.д. " +
+//                "Ответив на последний вопрос, еще раз внимательно прочитайте вопросы и ваши ответы. Найдите закономерности и сделайте обобщение, какие дела, настоящие и будущие вас захватывают?",
+//        TextBtn = "НАЧАТЬ",
+//        BtnBorderColor = BorderOrange,
+//        BtnBackgroundColor = BorderBlue,
+//        FontSize = 28.sp
+//    ))
+//}

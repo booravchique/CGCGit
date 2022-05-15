@@ -24,4 +24,9 @@ sealed class Nav(val route: String) {
 
         const val argument0: String = "0"
     }
+
+    object QuestionLink : Nav("QuestionLink")
+
+    object ChoiceLink : Nav("ChoiceLink")
+
 }
