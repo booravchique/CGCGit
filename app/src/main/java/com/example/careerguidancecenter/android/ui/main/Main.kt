@@ -1,41 +1,35 @@
 package com.example.careerguidancecenter.android.ui.main
 
-import android.os.Build
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.careerguidancecenter.android.R
 import androidx.navigation.compose.rememberNavController
-import com.example.careerguidancecenter.android.ui.Nav
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.navArgument
-import com.example.careerguidancecenter.android.ui.core.*
+import com.example.careerguidancecenter.android.R
+import com.example.careerguidancecenter.android.ui.Nav
+import com.example.careerguidancecenter.android.ui.core.LevelHint
+import com.example.careerguidancecenter.android.ui.core.LevelLoad
+import com.example.careerguidancecenter.android.ui.core.LevelOneMainScreenLayout
+import com.example.careerguidancecenter.android.ui.core.LevelTwoMainScreenLayout
 import com.example.careerguidancecenter.android.ui.core.model.HintData
 import com.example.careerguidancecenter.android.ui.main.model.Level
 import com.example.careerguidancecenter.android.ui.setting.SettingsList
@@ -52,16 +46,16 @@ var Data = listOf(
             Text = "Внимательно прочитайте вопросы и ответьте на них. Отвечайте честно, используя глаголы сделать, создать, разработать и т.д. " +
                     "Ответив на последний вопрос, еще раз внимательно прочитайте вопросы и ваши ответы. Найдите закономерности и сделайте обобщение, какие дела, настоящие и будущие вас захватывают?",
             TextBtn = "НАЧАТЬ",
-            BtnBorderColor = BorderOrange,
-            BtnBackgroundColor = MainOrange,
+            BtnBorderColor = MainCyan,
+            BtnBackgroundColor = BorderCyan,
             FontSize = 28.sp,
             Link = Nav.QuestionLink.route
         ),
         LevelLabel = "Уровень 1",
         Name = "Мысли",
-        Background = MainOrange,
-        BorderColor = BorderOrange,
-        Image = R.drawable.thoughtsfull
+        Background = MainCyan,
+        BorderColor = BorderCyan,
+        Image = R.drawable.selfknowledge
     ),
     Level(
         Id = 2,
@@ -70,29 +64,38 @@ var Data = listOf(
             Text = "Внимательно изучите список умений, и выберите 5 умений, которые вам ближе всего. " +
                     "Выбери те 5 умений, которые попадают в самую точку и характеризуют именно вас.",
             TextBtn = "НАЧАТЬ",
-            BtnBorderColor = BorderBlue,
-            BtnBackgroundColor = MainBlue,
+            BtnBorderColor = BorderTurquoise,
+            BtnBackgroundColor = MainTurquoise,
             FontSize = 32.sp,
             Link = Nav.ChoiceLink.route
         ),
         LevelLabel = "Уровень 2",
         Name = "Дела",
-        Background = MainBlue,
-        BorderColor = BorderBlue,
-        Image = R.drawable.dealsfull
+        Background = MainTurquoise,
+        BorderColor = BorderTurquoise,
+        Image = R.drawable.talents
     ),
     Level(
         Id = 3,
         HintData = null,
-        LevelLabel = "Уровень 3",
-        Name = "Вопросы",
-        Background = MainGreen,
-        BorderColor = BorderGreen,
-        Image = R.drawable.answersfull
+        LevelLabel = "",
+        Name = "",
+        Background = MainOrange,
+        BorderColor = BorderOrange,
+        Image = R.drawable.level3image
+    ),
+    Level(
+        Id = 4,
+        HintData = null,
+        LevelLabel = "Уровень 4",
+        Name = "Твой выбор",
+        Background = MainLightRed,
+        BorderColor = BorderLightRed,
+        Image = R.drawable.yourchoice
     ),
 )
 
-@Preview
+
 @Composable
 fun LevelsLayoutScreen() {
     val navController = rememberNavController()
@@ -189,9 +192,25 @@ fun LevelsHeader(
             Icon(
                 painter = painterResource(id = R.drawable.settings_ic),
                 contentDescription = null,
+                tint = MainGray
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun Preview() {
+    val navController = rememberNavController()
+    Column(){
+        Column(
+            modifier = Modifier.padding(bottom = 16.dp)
+        ) {
+            LevelsHeader(navController)
+        }
+        LevelsSection(navController, Data)
+    }
+
 }
 
 @Composable

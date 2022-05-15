@@ -93,6 +93,7 @@ fun SettingsHeader(
             Icon(
                 painter = painterResource(id = R.drawable.back_arrow_ic),
                 contentDescription = null,
+                tint = MainGray
             )
         }
         Text(

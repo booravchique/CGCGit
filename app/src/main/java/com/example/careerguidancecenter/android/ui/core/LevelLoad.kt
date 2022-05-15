@@ -12,11 +12,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.careerguidancecenter.android.ui.main.Data
 import com.example.careerguidancecenter.android.ui.main.model.Level
 import com.example.careerguidancecenter.android.ui.theme.MainOrange
 import com.example.careerguidancecenter.android.ui.theme.RalewayFontFamily
+
+@Preview
+@Composable
+fun Preview() {
+    LevelLoad(Data[1])
+}
 
 @Composable
 fun LevelLoad(level:Level) {

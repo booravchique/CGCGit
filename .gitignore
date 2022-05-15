@@ -40,3 +40,5 @@ local.properties
 .idea/modules.xml
 local.properties
 .gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
