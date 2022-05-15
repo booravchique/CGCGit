@@ -129,7 +129,6 @@ fun LevelTwoMainScreenHeader(
     }
 }
 
-@Preview
 @Composable
 fun Questions(): Int {
 

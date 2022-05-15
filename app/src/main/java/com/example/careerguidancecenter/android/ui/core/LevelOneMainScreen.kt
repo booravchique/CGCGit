@@ -27,10 +27,9 @@ import com.example.careerguidancecenter.android.ui.core.model.Messages
 import com.example.careerguidancecenter.android.ui.core.model.MsgContent
 import com.example.careerguidancecenter.android.ui.theme.*
 
-@Preview
 @Composable
 fun LevelOneMainScreenLayout(
-//    navController: NavHostController
+    navController: NavHostController
 ) {
     val constraints = ConstraintSet {
         val firstChild = createRefFor("firstChild")

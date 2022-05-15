@@ -15,4 +15,5 @@ data class Level(
     val Background: Color,
     val BorderColor: Color,
     val Image: Int,
+    val Link: String
 )

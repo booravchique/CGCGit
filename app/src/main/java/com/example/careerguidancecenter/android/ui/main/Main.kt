@@ -32,10 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.careerguidancecenter.android.R
 import com.example.careerguidancecenter.android.ui.Nav
-import com.example.careerguidancecenter.android.ui.core.LevelHint
-import com.example.careerguidancecenter.android.ui.core.LevelLoad
-import com.example.careerguidancecenter.android.ui.core.LevelOneMainScreenLayout
-import com.example.careerguidancecenter.android.ui.core.LevelTwoMainScreenLayout
+import com.example.careerguidancecenter.android.ui.core.*
 import com.example.careerguidancecenter.android.ui.core.model.HintData
 import com.example.careerguidancecenter.android.ui.main.model.Level
 import com.example.careerguidancecenter.android.ui.setting.SettingsList
@@ -62,6 +59,7 @@ var Data = listOf(
         Background = MainCyan,
         BorderColor = BorderCyan,
         Image = R.drawable.ic_level1img,
+        Link = ""
     ),
     Level(
         Id = 2,
@@ -80,15 +78,17 @@ var Data = listOf(
         Background = MainTurquoise,
         BorderColor = BorderTurquoise,
         Image = R.drawable.ic_level2img,
+        Link = ""
     ),
     Level(
         Id = 3,
-        HintData = null,
+        HintData = HintData(3, "","", Color.Transparent,Color.Transparent,0.sp,Nav.ProfessionsLink.route),
         LevelLabel = "Уровень 3",
         Name = "Профессии",
         Background = MainOrange,
         BorderColor = BorderOrange,
         Image = R.drawable.ic_level3img,
+        Link = Nav.ProfessionsLink.route
     ),
     Level(
         Id = 4,
@@ -98,6 +98,7 @@ var Data = listOf(
         Background = MainLightRed,
         BorderColor = BorderLightRed,
         Image = R.drawable.ic_level4img,
+        Link = ""
     ),
 )
 
@@ -127,8 +128,13 @@ fun LevelsLayoutScreen() {
                 backStackEntry.arguments?.getInt(Nav.LevelsLoad.argument0) ?: return@composable
             val level = Data.filter { it.Id == levelId }.first()
 
-            LaunchedEffect(key1 = true) {
-                delay(3000L)
+
+            if(level.HintData !=null) {
+                LaunchedEffect(key1 = true) {
+                    delay(3000L)
+                    navController.navigate("${Nav.Levels.route}/${levelId}")
+                }
+            } else {
                 navController.navigate("${Nav.Levels.route}/${levelId}")
             }
 
@@ -166,11 +172,15 @@ fun LevelsLayoutScreen() {
             SettingsList(navController)
         }
         composable(Nav.QuestionLink.route) {
-            LevelOneMainScreenLayout(/*navController*/)
+            LevelOneMainScreenLayout(navController)
         }
 
         composable(Nav.ChoiceLink.route) {
             LevelTwoMainScreenLayout(navController)
+        }
+
+        composable(Nav.ProfessionsLink.route) {
+            LevelThreeMainScreenLayout(navController)
         }
     }
 }
