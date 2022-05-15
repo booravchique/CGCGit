@@ -22,9 +22,8 @@ class SignInViewModel @Inject constructor(
 
 
      val result1 = MutableLiveData<String>()
-     val result2 = MutableLiveData<String>()
-     val result3 = MutableLiveData<String>()
-    val result4 = MutableLiveData<String>()
+
+
     private var _errorLiveData = MutableLiveData<String>()
     var errorLiveData: LiveData<String> = _errorLiveData
 
@@ -43,49 +42,7 @@ class SignInViewModel @Inject constructor(
             }
         }
     }
-    fun q(token:String){
-        viewModelScope.launch {
-            val result = quest.execute(token)
-            when(result){
-                is Resource.Error -> {
-                    _errorLiveData.value = result.message!!
-                    Log.i("LiveDataError", result.message)
-                }
-                is Resource.Success -> {
-                    Log.d("Result", result.data.toString())
-                    result2.value = result.data?.value.toString()
-                }
-            }
-        }
-    }
-    fun ansew(token:String,hashMap: HashMap<String,Any>){
-        viewModelScope.launch {
-            val result = ans.execute(hashMap,token)
-            when(result){
-                is Resource.Error -> {
-                    _errorLiveData.value = result.message!!
-                    Log.i("LiveDataError", result.message)
-                }
-                is Resource.Success -> {
-                    Log.d("Result", result.data.toString())
-                    result3.value = result.data?.success.toString()
-                }
-            }
-        }
-    }
-    fun getans(token:String){
-        viewModelScope.launch {
-            val result = getMyAnswersUseCase.execute(token)
-            when(result){
-                is Resource.Error -> {
-                    _errorLiveData.value = result.message!!
-                    Log.i("LiveDataError", result.message)
-                }
-                is Resource.Success -> {
-                    Log.d("Result", result.data.toString())
-                    result4.value = result.data?.toString()
-                }
-            }
-        }
-    }
+
+
+
 }

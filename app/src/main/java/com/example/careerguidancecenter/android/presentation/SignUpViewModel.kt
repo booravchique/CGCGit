@@ -1,6 +1,7 @@
 package com.example.careerguidancecenter.android.presentation
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.careerguidancecenter.android.common.Resource
 import com.example.careerguidancecenter.android.domain.usecases.SIgnUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.http.Body
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +20,7 @@ class SignUpViewModel @Inject constructor(
 ) :ViewModel() {
 
 
+     val success  = MutableLiveData<Boolean>()
 
     private var _errorLiveData = MutableLiveData<String>()
     var errorLiveData: LiveData<String> = _errorLiveData
@@ -31,6 +35,7 @@ class SignUpViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
+                    success.value = result.data?.success
                 }
             }
         }

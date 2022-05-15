@@ -1,22 +1,20 @@
 package com.example.careerguidancecenter.android.ui.authorization
 
+import android.widget.Toast
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
-import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,27 +22,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
-import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
-import com.example.careerguidancecenter.android.network.model.SignResult
+import com.example.careerguidancecenter.android.network.model.SignInInfo
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
+import com.example.careerguidancecenter.android.presentation.SignInViewModel
 import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.theme.*
-import dagger.hilt.android.AndroidEntryPoint
+import kotlin.coroutines.coroutineContext
 
 @Composable
-fun SignUp(
+fun SignIn(
     navHostController: NavHostController,
-    viewModel: SignUpViewModel
-) {
+    viewModel: SignUpViewModel = viewModel()
+){
     val shape = RoundedCornerShape(10.dp)
 
-    var fullName = remember { mutableStateOf("") }
+    var email = remember { mutableStateOf("") }
+    var fullname = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
+    var confirmpassword = remember { mutableStateOf("") }
 
     val constraints = ConstraintSet {
         val firstChild = createRefFor("firstChild")
@@ -61,7 +60,7 @@ fun SignUp(
             end.linkTo(parent.end)
         }
     }
-
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +71,7 @@ fun SignUp(
     ) {
         ConstraintLayout(
             constraints,
-        modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Column(
                 modifier = Modifier.layoutId("firstChild"),
@@ -81,7 +80,7 @@ fun SignUp(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = "РЕГИСТРАЦИЯ",
+                    text = "ВХОД",
                     color = DarkTextColor,
                     fontFamily = RalewayFontFamily,
                     fontWeight = FontWeight.Bold,
@@ -89,18 +88,33 @@ fun SignUp(
                     textAlign = TextAlign.Center
                 )
                 OutlinedTextField(
-                    value = fullName.value,
+                    value = fullname.value,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
-                    onValueChange = { fullName.value = it },
+                    onValueChange = { fullname.value = it },
                     placeholder = { Text("Имя") },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = BorderCyan,
                         unfocusedBorderColor = BorderGray,
-                        backgroundColor = White
+                        backgroundColor = Color.White
+                    )
+                )
+                OutlinedTextField(
+                    value = email.value,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    onValueChange = { email.value = it },
+                    placeholder = { Text("Почта") },
+                    singleLine = true,
+                    shape = shape,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = BorderCyan,
+                        unfocusedBorderColor = BorderGray,
+                        backgroundColor = Color.White
                     )
                 )
                 OutlinedTextField(
@@ -115,24 +129,50 @@ fun SignUp(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = BorderCyan,
                         unfocusedBorderColor = BorderGray,
-                        backgroundColor = White
+                        backgroundColor = Color.White
                     )
                 )
-
+                OutlinedTextField(
+                    value = confirmpassword.value,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    onValueChange = { confirmpassword.value = it },
+                    placeholder = { Text("Повторите пароль") },
+                    singleLine = true,
+                    shape = shape,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = BorderCyan,
+                        unfocusedBorderColor = BorderGray,
+                        backgroundColor = Color.White
+                    )
+                )
                 OutlinedButton(
                     modifier = Modifier
                         .padding(top = 30.dp),
                     onClick = {
-                        val login = fullName.value
+                        val email = email.value
+                        val fullName = fullname.value
                         val password = password.value
-
                         val hashMap:HashMap<String, String> = hashMapOf()
-                        hashMap.put("fullName", login)
+                        hashMap.put("fullName", fullName)
                         hashMap.put("password", password)
-                        hashMap.put("name", password)
+                        hashMap.put("email", email)
                         viewModel.signUp(hashMap)
 
-                        navHostController.navigate(Nav.Home.route)
+                     //   val result by viewModel.success.observe
+//                        viewModel.success.observe(**viewLifecycleOwner**) {
+//                            if (it){
+//                                navHostController.navigate(Nav.Home.route)
+//                            }
+//                            else{
+//                                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+//                            }
+//
+//                        }
+
+
+
                     },
                     shape = shape,
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -143,11 +183,11 @@ fun SignUp(
                     )
                 {
                     Text(
-                        text = "ВОЙТИ",
+                        text = "ЗАРЕГИСТРИРОВАТЬСЯ",
                         fontFamily = RalewayFontFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
-                        color = White,
+                        color = Color.White,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -157,9 +197,9 @@ fun SignUp(
 
                     },
                     colors = ButtonDefaults.outlinedButtonColors(
-                        backgroundColor = Transparent
+                        backgroundColor = Color.Transparent
                     ),
-                    border = BorderStroke(0.dp, Transparent),
+                    border = BorderStroke(0.dp, Color.Transparent),
                 ) {
                     Text(
 
@@ -170,21 +210,23 @@ fun SignUp(
             }
 
             OutlinedButton(
-                modifier = Modifier.padding(top = 8.dp).layoutId("secondChild"),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .layoutId("secondChild"),
                 onClick = {
-                    navHostController.navigate(Nav.SignIn.route)
+                    navHostController.navigate(Nav.SignUp.route)
+
                 },
                 colors = ButtonDefaults.outlinedButtonColors(
-                    backgroundColor = Transparent
+                    backgroundColor = Color.Transparent
                 ),
-                border = BorderStroke(0.dp, Transparent),
+                border = BorderStroke(0.dp, Color.Transparent),
             ) {
                 Text(
-                    text = "У вас нет учетной записи? Создайте ее!",
+                    text = "Вы уже зарегистрированы? Войдите!",
                     color = MainGray
                 )
             }
         }
     }
 }
-

@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.authorization.Sign
 import com.example.careerguidancecenter.android.ui.root.RootViewModel
 import com.example.careerguidancecenter.android.ui.theme.CareerGuidanceCenterTheme
@@ -20,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @VisibleForTesting
     internal val viewModel: RootViewModel by viewModels()
-
+    private val signUpViewModel:SignUpViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

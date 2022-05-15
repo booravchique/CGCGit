@@ -10,28 +10,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.careerguidancecenter.android.Token
+import com.example.careerguidancecenter.android.presentation.SignInViewModel
 import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.main.LevelsLayoutScreen
 import com.example.careerguidancecenter.android.ui.theme.BackgroundFillGray
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @Preview
 @Composable
-fun Sign(){
+fun Sign (){
     val navController = rememberNavController()
     val viewModel: SignViewModel = viewModel()
-
+    val signUpViewModel = hiltViewModel<SignUpViewModel>()
+    val signInViewModel = hiltViewModel<SignInViewModel>()
     var startRoute = Nav.Start.route
     if(Token != null){
         startRoute = Nav.Home.route
     }
     NavHost(navController = navController, startDestination = startRoute) {
         composable(Nav.Start.route){
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -104,10 +110,10 @@ fun Sign(){
             LevelsLayoutScreen()
         }
         composable(Nav.SignUp.route){
-            SignUp(navController, viewModel())
+            SignUp(navController, signInViewModel)
         }
         composable(Nav.SignIn.route){
-            SignIn(navController, viewModel())
+            SignIn(navController, signUpViewModel)
         }
 
     }

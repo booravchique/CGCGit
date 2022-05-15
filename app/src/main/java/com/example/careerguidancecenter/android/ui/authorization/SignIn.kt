@@ -1,16 +1,22 @@
 package com.example.careerguidancecenter.android.ui.authorization
 
+import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,24 +25,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.careerguidancecenter.android.network.model.SignInInfo
+import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
+import com.example.careerguidancecenter.android.network.model.SignResult
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
+import com.example.careerguidancecenter.android.presentation.SignInViewModel
 import com.example.careerguidancecenter.android.presentation.SignUpViewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.theme.*
+import dagger.hilt.android.AndroidEntryPoint
 
 @Composable
-fun SignIn(
+
+fun SignUp(
     navHostController: NavHostController,
-    viewModel: SignUpViewModel
-){
+    viewModel: SignInViewModel = viewModel()
+
+) {
+
     val shape = RoundedCornerShape(10.dp)
 
-    var email = remember { mutableStateOf("") }
-    var fullname = remember { mutableStateOf("") }
+    var fullName = remember { mutableStateOf("") }
     var password = remember { mutableStateOf("") }
-    var confirmpassword = remember { mutableStateOf("") }
 
     val constraints = ConstraintSet {
         val firstChild = createRefFor("firstChild")
@@ -64,7 +77,7 @@ fun SignIn(
     ) {
         ConstraintLayout(
             constraints,
-            modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
         ) {
             Column(
                 modifier = Modifier.layoutId("firstChild"),
@@ -73,7 +86,7 @@ fun SignIn(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = "ВХОД",
+                    text = "РЕГИСТРАЦИЯ",
                     color = DarkTextColor,
                     fontFamily = RalewayFontFamily,
                     fontWeight = FontWeight.Bold,
@@ -81,33 +94,18 @@ fun SignIn(
                     textAlign = TextAlign.Center
                 )
                 OutlinedTextField(
-                    value = fullname.value,
+                    value = fullName.value,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
-                    onValueChange = { fullname.value = it },
+                    onValueChange = { fullName.value = it },
                     placeholder = { Text("Имя") },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = BorderCyan,
                         unfocusedBorderColor = BorderGray,
-                        backgroundColor = Color.White
-                    )
-                )
-                OutlinedTextField(
-                    value = email.value,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                    onValueChange = { email.value = it },
-                    placeholder = { Text("Почта") },
-                    singleLine = true,
-                    shape = shape,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = BorderCyan,
-                        unfocusedBorderColor = BorderGray,
-                        backgroundColor = Color.White
+                        backgroundColor = White
                     )
                 )
                 OutlinedTextField(
@@ -122,30 +120,20 @@ fun SignIn(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = BorderCyan,
                         unfocusedBorderColor = BorderGray,
-                        backgroundColor = Color.White
+                        backgroundColor = White
                     )
                 )
-                OutlinedTextField(
-                    value = confirmpassword.value,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
-                    onValueChange = { confirmpassword.value = it },
-                    placeholder = { Text("Повторите пароль") },
-                    singleLine = true,
-                    shape = shape,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = BorderCyan,
-                        unfocusedBorderColor = BorderGray,
-                        backgroundColor = Color.White
-                    )
-                )
+
                 OutlinedButton(
                     modifier = Modifier
                         .padding(top = 30.dp),
                     onClick = {
-                            navHostController.navigate(Nav.Home.route)
+                        val login = fullName.value
+                        val password = password.value
 
+
+
+                        navHostController.navigate(Nav.Home.route)
                     },
                     shape = shape,
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -156,11 +144,11 @@ fun SignIn(
                     )
                 {
                     Text(
-                        text = "ЗАРЕГИСТРИРОВАТЬСЯ",
+                        text = "ВОЙТИ",
                         fontFamily = RalewayFontFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
-                        color = Color.White,
+                        color = White,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -170,9 +158,9 @@ fun SignIn(
 
                     },
                     colors = ButtonDefaults.outlinedButtonColors(
-                        backgroundColor = Color.Transparent
+                        backgroundColor = Transparent
                     ),
-                    border = BorderStroke(0.dp, Color.Transparent),
+                    border = BorderStroke(0.dp, Transparent),
                 ) {
                     Text(
 
@@ -183,21 +171,23 @@ fun SignIn(
             }
 
             OutlinedButton(
-                modifier = Modifier.padding(top = 8.dp).layoutId("secondChild"),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .layoutId("secondChild"),
                 onClick = {
-                    navHostController.navigate(Nav.SignUp.route)
-
+                    navHostController.navigate(Nav.SignIn.route)
                 },
                 colors = ButtonDefaults.outlinedButtonColors(
-                    backgroundColor = Color.Transparent
+                    backgroundColor = Transparent
                 ),
-                border = BorderStroke(0.dp, Color.Transparent),
+                border = BorderStroke(0.dp, Transparent),
             ) {
                 Text(
-                    text = "Вы уже зарегистрированы? Войдите!",
+                    text = "У вас нет учетной записи? Создайте ее!",
                     color = MainGray
                 )
             }
         }
     }
 }
+
