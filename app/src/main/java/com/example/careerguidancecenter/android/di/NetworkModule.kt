@@ -1,42 +1,70 @@
 package com.example.careerguidancecenter.android.di
 
-import android.content.Context
-import coil.util.CoilUtils
+import com.example.careerguidancecenter.android.data.network.ApiServ
+import com.example.careerguidancecenter.android.data.network.NetworkApiStorage
+import com.example.careerguidancecenter.android.data.network.NetworkStorage
+import com.example.careerguidancecenter.android.data.repository.SignUpRepositoryImpl
+import com.example.careerguidancecenter.android.domain.repository.SignUpRepository
 import com.example.careerguidancecenter.android.network.ApiService
 import com.example.careerguidancecenter.android.network.AuthorizationService
-import com.example.careerguidancecenter.android.network.RequestInterceptor
+import com.google.gson.Gson
 import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+
+
     @Provides
     @Singleton
-    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
+    fun provideGson(): Gson
+    {
+        return Gson()
+    }
+
+    @Provides
+    @IoDispatcher
+    @Singleton
+    fun corutineDisp(): CoroutineDispatcher = Dispatchers.IO
+
+
+
+    @Provides
+    @Singleton
+    fun provideNetworkStorage(retrofit: ApiServ, gson: Gson): NetworkStorage {
+        return NetworkApiStorage(retrofit,gson)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        var httpClient : OkHttpClient
+        val logi= HttpLoggingInterceptor()
+        logi.level = HttpLoggingInterceptor.Level.BODY
+
         return OkHttpClient.Builder()
-            .addInterceptor(RequestInterceptor())
-            .cache(CoilUtils.createDefaultCache(context))
+            .addInterceptor(logi)
+            .dns(Dns.SYSTEM)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-
+    fun provideRetrofit(okHttpClient: OkHttpClient): ApiServ {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(
@@ -45,6 +73,13 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
+            .create(ApiServ::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignIn(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher): SignUpRepository {
+        return SignUpRepositoryImpl(networkStorage,gson,dispatcher)
     }
 
 
@@ -60,3 +95,7 @@ object NetworkModule {
         return AuthorizationService(apiService)
     }
 }
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class IoDispatcher
