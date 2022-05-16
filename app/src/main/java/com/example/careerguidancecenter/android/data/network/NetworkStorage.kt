@@ -4,6 +4,7 @@ import com.example.careerguidancecenter.android.domain.models.answer.Answers
 import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAllSkills
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
+import com.example.careerguidancecenter.android.domain.models.getTopProfession.GetTopProfession
 import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.domain.models.questions.Questions
 import com.example.careerguidancecenter.android.domain.models.selectSkills.SelectSkills
@@ -17,4 +18,5 @@ interface NetworkStorage {
     suspend fun selectSkills(token: String,listSkills: MutableList<Int>):SelectSkills
     suspend fun getMySelectSkills(token: String):GetMySelectSkills
     suspend fun getAllSKills():GetAllSkills
+    suspend fun getTopProfession():GetTopProfession
 }
