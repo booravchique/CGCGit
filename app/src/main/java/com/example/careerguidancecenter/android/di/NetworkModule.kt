@@ -103,6 +103,24 @@ object NetworkModule {
     fun provideGetMyAnswer(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):GetMyAnswersRepository{
         return GetMyAnswersRepositoryImpl(networkStorage,gson,dispatcher)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetSkills(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):SelectSkillsRepository{
+        return SelectSkillsRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+    @Provides
+    @Singleton
+    fun provideMySkills(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):GetMySkillsRepository{
+        return GetMySelectSkillsRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAllSkills(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):GetAllSkillsRepository{
+        return GetMyAllSkillsRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+
     @Provides
     @Singleton
     fun provideApiService(okHttpClient: OkHttpClient): ApiService {

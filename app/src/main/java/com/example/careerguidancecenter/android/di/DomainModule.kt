@@ -36,4 +36,19 @@ class DomainModule {
     fun provideGetMyAnswer(repository: GetMyAnswersRepository): GetMyAnswersUseCase{
         return GetMyAnswersUseCase(repository)
     }
+
+    @Provides
+    fun provideSelectSkills(repository:SelectSkillsRepository): SelectSkillsUseCase{
+        return SelectSkillsUseCase(repository)
+    }
+
+    @Provides
+    fun provideMySelectSkills(repository: GetMySkillsRepository): GetMySelectSkillsUseCase{
+        return GetMySelectSkillsUseCase(repository)
+    }
+
+    @Provides
+    fun provideAllSelectSkills(repository: GetAllSkillsRepository): GetAllSkillsUseCase{
+        return GetAllSkillsUseCase(repository)
+    }
 }
