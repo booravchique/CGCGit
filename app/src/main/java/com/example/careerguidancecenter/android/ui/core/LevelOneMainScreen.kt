@@ -2,6 +2,7 @@ package com.example.careerguidancecenter.android.ui.core
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -12,9 +13,11 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
@@ -41,6 +44,7 @@ import com.example.careerguidancecenter.android.ui.core.model.Messages
 import com.example.careerguidancecenter.android.ui.theme.*
 import com.example.careerguidancecenter.android.Token
 
+
 @Composable
 fun LevelOneMainScreenLayout(
     navController: NavHostController,
@@ -62,35 +66,35 @@ fun LevelOneMainScreenLayout(
     }
     questionsViewModel.getAnswers(Token ?: "")
 
-    if(answers.value == null || answers.value == null)
+    if (answers.value == null || answers.value == null)
         return
 
     val listMessages: MutableList<Message> = mutableListOf()
-    answers.value?.value?.map{
+    answers.value?.value?.map {
         val qId = it.questionId
-        val question = questions.value?.value?.first{ it.id == qId}
+        val question = questions.value?.value?.first { it.id == qId }
 
         listMessages.add(Message(qId, question?.cultureLabel?.text ?: "", false))
         listMessages.add(Message(qId, it.content, true))
     }
 
-    var questionsNotAnswers = questions.value?.value?.filter{
+    var questionsNotAnswers = questions.value?.value?.filter {
         val qId = it.id
-        !listMessages.any{ it.id == qId && !it.isAnswer  }
-    }?.sortedBy{ it.id }
+        !listMessages.any { it.id == qId && !it.isAnswer }
+    }?.sortedBy { it.id }
 
-    var message : MutableState<Message?> = remember { mutableStateOf(null) }
-    var isEnd : MutableState<Boolean> = remember { mutableStateOf(false) }
+    var message: MutableState<Message?> = remember { mutableStateOf(null) }
+    var isEnd: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     var questionsCount = questions.value?.value?.size ?: 1;
     var questionsNotAnswersCount = questionsNotAnswers?.size ?: 0
-    var progress : MutableState<Float> = remember {
-        mutableStateOf((1f / questionsCount) * (questionsCount - questionsNotAnswersCount)) }
-
-    if(!(questionsNotAnswers?.any() ?: false) ){
-        isEnd.value = true
+    var progress: MutableState<Float> = remember {
+        mutableStateOf((1f / questionsCount) * (questionsCount - questionsNotAnswersCount))
     }
-    else{
+
+    if (!(questionsNotAnswers?.any() ?: false)) {
+        isEnd.value = true
+    } else {
         var next = questionsNotAnswers?.first()!!
         listMessages.add(Message(next.id, next.cultureLabel.text, false))
     }
@@ -116,7 +120,12 @@ fun LevelOneMainScreenLayout(
             bottom.linkTo(parent.bottom)
         }
     }
-    ConstraintLayout(constraints) {
+    ConstraintLayout(
+        constraints,
+        modifier = Modifier
+            .background(BackgroundFillGray)
+            .padding(start = 8.dp, end = 8.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -143,7 +152,7 @@ fun LevelOneMainScreenLayout(
                 .fillMaxWidth()
                 .background(BackgroundFillGray)
                 .layoutId("lastChild")
-        ){
+        ) {
             LevelOneTextField(message, questionsViewModel, isEnd, navController)
         }
     }
@@ -169,9 +178,10 @@ fun LevelOneMainScreenLayout(
 
 @Composable
 fun LevelOneMainScreenHeader(
-    progress : MutableState<Float>,
-    navController: NavHostController
+    progress: MutableState<Float>,
+    navController: NavHostController,
 ) {
+    var showAlertDialog = remember { mutableStateOf(false) }
     val constraints = ConstraintSet {
         val closeBtn = createRefFor("closeBtn")
         val restartBtn = createRefFor("restartBtn")
@@ -201,19 +211,14 @@ fun LevelOneMainScreenHeader(
         constraints,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp)
+            .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 8.dp)
     ) {
-        Button(
+        Box(
             modifier = Modifier
-                .layoutId("restartBtn"),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp),
-            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
+                .layoutId("restartBtn")
+                .clickable { showAlertDialog.value = true },
         ) {
             Icon(
-                modifier = Modifier
-                    .padding(all = 0.dp),
                 painter = painterResource(id = R.drawable.restartbtn_ic),
                 contentDescription = null,
                 tint = MainGray
@@ -230,14 +235,10 @@ fun LevelOneMainScreenHeader(
             color = MainCyan
         )
 
-        Button(
-            modifier = Modifier.layoutId("closeBtn"),
-            onClick = {
-                      navController.navigate(Nav.Home.route)
-            },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp),
-            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
+        Box(
+            modifier = Modifier
+                .layoutId("closeBtn")
+                .clickable { navController.navigate(Nav.Home.route) },
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.closebtn_ic),
@@ -260,9 +261,9 @@ fun LevelOneTextField(
 
 
     fun sendMessage() {
-        val hashMap:HashMap<String,Any> = hashMapOf()
+        val hashMap: HashMap<String, Any> = hashMapOf()
         hashMap.put("questionId", questionsViewModel.messages.last().id)
-        hashMap.put("content",answer.value)
+        hashMap.put("content", answer.value)
         questionsViewModel.postAnswer(Token ?: "", hashMap)
 
 
@@ -273,7 +274,7 @@ fun LevelOneTextField(
 
     Row {
 
-        if(isEnd.value){
+        if (isEnd.value) {
             OutlinedButton(
                 onClick = {
                     navController.navigate("${Nav.LevelsLoad.route}/2")
@@ -281,13 +282,13 @@ fun LevelOneTextField(
                 shape = shape,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 10.dp, start = 10.dp)
+                    .padding(bottom = 4.dp)
                     .border(1.dp, BorderTurquoise, shape = shape),
                 colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
                 contentPadding = PaddingValues(8.dp)
             ) {
                 Text(
-                    modifier = Modifier,
+                    modifier = Modifier.padding(bottom = 4.dp),
                     text = "Закончить",
                     color = Color.White,
                     fontFamily = RalewayFontFamily,
@@ -297,8 +298,7 @@ fun LevelOneTextField(
                 )
             }
 
-        }
-        else{
+        } else {
             TextField(
                 modifier = Modifier.weight(1f),
                 value = answer.value,
@@ -329,8 +329,87 @@ fun LevelOneTextField(
                 )
             }
         }
-
     }
+}
 
 
+@Composable
+fun modalView(
+    showAlertDialog: MutableState<Boolean>
+) {
+    if (showAlertDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                showAlertDialog.value = false
+            },
+            title = {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 14.dp, top = 8.dp),
+                        text = "Весь прогресс будет сброшен",
+                        color = DarkTextColor,
+                        fontFamily = RalewayFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 14.dp, top = 8.dp),
+                        text = "Продолжить?",
+                        color = DarkTextColor,
+                        fontFamily = RalewayFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier
+                        .padding(all = 8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        modifier = Modifier,
+                        onClick = { showAlertDialog.value = false },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MainCyan)
+                    ) {
+                        Text(
+                            modifier = Modifier,
+                            text = "Назад",
+                            color = White,
+                            fontFamily = RalewayFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    Button(
+                        modifier = Modifier,
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MainCyan)
+                    ) {
+                        Text(
+                            modifier = Modifier,
+                            text = "Сброс",
+                            color = White,
+                            fontFamily = RalewayFontFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            },
+            backgroundColor = White
+        )
+    }
 }

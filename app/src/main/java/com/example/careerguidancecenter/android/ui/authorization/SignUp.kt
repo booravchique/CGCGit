@@ -102,7 +102,7 @@ fun SignIn(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     onValueChange = { fullname.value = it },
-                    placeholder = { Text("Имя") },
+                    placeholder = { Text("Имя", color = MainGray) },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -117,7 +117,7 @@ fun SignIn(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     onValueChange = { email.value = it },
-                    placeholder = { Text("Почта") },
+                    placeholder = { Text("Почта", color = MainGray) },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -132,7 +132,7 @@ fun SignIn(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     onValueChange = { password.value = it },
-                    placeholder = { Text("Пароль") },
+                    placeholder = { Text("Пароль", color = MainGray) },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -147,7 +147,7 @@ fun SignIn(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     onValueChange = { confirmpassword.value = it },
-                    placeholder = { Text("Повторите пароль") },
+                    placeholder = { Text("Повторите пароль", color = MainGray) },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -184,6 +184,7 @@ fun SignIn(
                     )
                 {
                     Text(
+                        modifier = Modifier.padding(bottom = 2.dp),
                         text = "ЗАРЕГИСТРИРОВАТЬСЯ",
                         fontFamily = RalewayFontFamily,
                         fontWeight = FontWeight.Bold,
@@ -213,9 +214,11 @@ fun SignIn(
 
                     signUpResult.value?.errors?.forEach{
                         Text(
-
                             text = it.name,
-                            color = MainGray
+                            color = MainLightRed,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Light,
+                            fontSize = 12.sp
                         )
                     }
                 }

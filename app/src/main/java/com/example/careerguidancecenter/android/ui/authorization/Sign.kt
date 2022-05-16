@@ -151,12 +151,7 @@ fun Sign (){
         }
 
         composable(Nav.ProfessionsLink.route) {
-            LevelThreeMainScreenLayout(navController)
+            LevelThreeMainScreenLayout()
         }
-
-
     }
-
-
-
 }

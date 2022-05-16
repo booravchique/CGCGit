@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,68 +26,54 @@ import com.example.careerguidancecenter.android.ui.theme.*
 val incomingMsgShape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomEnd = 15.dp)
 val outgoingMsgShape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomStart = 15.dp)
 
-@Preview
-@Composable
-fun Preview() {
-}
 
 @Composable
 fun Messages(
     fullCount: Int,
-    progress : MutableState<Float>,
+    progress: MutableState<Float>,
     questionsViewModel: QuestionsViewModel,
     message: MutableState<Message?>,
     isEnd: MutableState<Boolean>,
 ) {
 
 
-    if(message.value != null){
+    if (message.value != null) {
 
         Log.i("LiveDataError", questionsViewModel.questionsNotAnswer.toString())
         println("feffef")
         questionsViewModel.messages.add(message.value ?: Message(-1, "", true))
 
         questionsViewModel.questionsNotAnswer.remove(
-            questionsViewModel.questionsNotAnswer.first{it.id == message.value?.id}
+            questionsViewModel.questionsNotAnswer.first { it.id == message.value?.id }
         )
 
         var questionsCount = questionsViewModel.questions.value?.value?.size ?: 1;
         progress.value += (1f / questionsCount)
 
-        if(!questionsViewModel.questionsNotAnswer.any()){
+        if (!questionsViewModel.questionsNotAnswer.any()) {
             isEnd.value = true
-        }
-        else{
+        } else {
             val next = questionsViewModel.questionsNotAnswer.first()
             questionsViewModel.messages.add(Message(next.id, next.cultureLabel.text, false))
-
 
             message.value = null
 
         }
     }
-
-
-
     println("fefhuefheff")
-
-
-
-
     Box(
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
-
-            ) {
+        ) {
             LazyColumn(
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .weight(1f)
-                    .padding(bottom = 60.dp, start = 8.dp, end = 8.dp),
+                    .padding(bottom = 60.dp),
             ) {
 
                 items(questionsViewModel.messages.size) {
@@ -122,13 +109,13 @@ fun IncomingMsgLayout(
     ) {
         Box(
             modifier = Modifier
-                .border(2.dp, BorderGray, shape = incomingMsgShape)
+                .border(1.dp, BorderGray, shape = incomingMsgShape)
                 .clip(incomingMsgShape)
                 .background(Color.White),
         ) {
             Text(
                 modifier = Modifier
-                    .padding(all = 8.dp),
+                    .padding(bottom = 6.dp, start = 6.dp, end = 6.dp),
                 text = msg,
                 color = DarkTextColor,
                 fontFamily = RalewayFontFamily,
@@ -153,15 +140,15 @@ fun OutgoingMsgLayout(
     ) {
         Box(
             modifier = Modifier
-                .border(2.dp, BorderCyan, shape = outgoingMsgShape)
+                .border(1.dp, BorderCyan, shape = outgoingMsgShape)
                 .clip(outgoingMsgShape)
                 .background(MainCyan)
         ) {
             Text(
                 modifier = Modifier
-                    .padding(all = 8.dp),
+                    .padding(bottom = 6.dp, start = 6.dp, end = 6.dp),
                 text = msg,
-                color = DarkTextColor,
+                color = White,
                 fontFamily = RalewayFontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 18.sp,

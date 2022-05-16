@@ -3,6 +3,7 @@ package com.example.careerguidancecenter.android.ui.core
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -14,6 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.careerguidancecenter.android.ui.theme.BorderCyan
+import com.example.careerguidancecenter.android.ui.theme.MainCyan
 import com.example.careerguidancecenter.android.ui.theme.RalewayFontFamily
 
 @Composable
@@ -37,8 +40,32 @@ fun DefaultButton(
         contentPadding = PaddingValues(8.dp)
     ) {
         Text(
-            modifier = Modifier,
+            modifier = Modifier.padding(bottom = 6.dp),
             text = textBtn,
+            color = Color.White,
+            fontFamily = RalewayFontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 38.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun prev() {
+    OutlinedButton(
+        onClick = {
+        },
+        shape = shape,
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, BorderCyan, shape = shape),
+        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainCyan),
+        contentPadding = PaddingValues(8.dp)
+    ) {
+        Text(
+            modifier = Modifier.padding(bottom = 6.dp),
+            text = "НАЧАТЬ",
             color = Color.White,
             fontFamily = RalewayFontFamily,
             fontWeight = FontWeight.Bold,

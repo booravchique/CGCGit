@@ -103,7 +103,7 @@ fun SignUp(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     onValueChange = { fullName.value = it },
-                    placeholder = { Text("Имя") },
+                    placeholder = { Text("Имя", color = MainGray) },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -118,7 +118,7 @@ fun SignUp(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                     onValueChange = { password.value = it },
-                    placeholder = { Text("Пароль") },
+                    placeholder = { Text("Пароль", color = MainGray) },
                     singleLine = true,
                     shape = shape,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -152,6 +152,7 @@ fun SignUp(
                     )
                 {
                     Text(
+                        modifier = Modifier.padding(bottom = 2.dp),
                         text = "ВОЙТИ",
                         fontFamily = RalewayFontFamily,
                         fontWeight = FontWeight.Bold,

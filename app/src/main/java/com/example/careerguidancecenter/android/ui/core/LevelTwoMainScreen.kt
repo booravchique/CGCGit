@@ -16,6 +16,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +45,8 @@ fun LevelTwoMainScreenLayout(
     navController: NavHostController = rememberNavController()
 ) {
     var count : MutableState<Int> = remember { mutableStateOf(0) }
+    var showBtn : MutableState<Boolean> = remember { mutableStateOf(false) }
+    if(count.value == 5) {showBtn.value = true} else {showBtn.value = false}
 
     Column(
         modifier = Modifier
@@ -50,20 +54,48 @@ fun LevelTwoMainScreenLayout(
             .background(BackgroundFillGray)
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        LevelTwoMainScreenHeader(count)
+        LevelTwoMainScreenHeader(count, navController)
+        Questions(count,showBtn)
+        if(showBtn.value) ТextLevelButton(showBtn, navController)
 
-        Questions(count, navController)
+    }
+}
 
-
-
-
+@Composable
+fun ТextLevelButton(showBtn: MutableState<Boolean>, navController: NavHostController) {
+    if(showBtn.value) {
+        Row {
+            OutlinedButton(
+                onClick = {
+                    navController.navigate("${Nav.LevelsLoad.route}/3")
+                },
+                shape = shape,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 10.dp, start = 10.dp)
+                    .border(1.dp, BorderTurquoise, shape = shape),
+                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
+                contentPadding = PaddingValues(8.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 6.dp),
+                    text = "Закончить",
+                    color = Color.White,
+                    fontFamily = RalewayFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
 
 
 @Composable
 fun LevelTwoMainScreenHeader(
-    count: MutableState<Int>
+    count: MutableState<Int>,
+    navController: NavHostController
 ) {
     val constraints = ConstraintSet {
         val closeBtn = createRefFor("closeBtn")
@@ -97,21 +129,12 @@ fun LevelTwoMainScreenHeader(
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 16.dp)
     ) {
-        Button(
+        Box(
             modifier = Modifier
-                .layoutId("restartBtn"),
-            onClick = {
-
-            },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp),
-            contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-
-
+                .layoutId("restartBtn")
+                .clickable {  },
             ) {
             Icon(
-                modifier = Modifier
-                    .padding(all = 0.dp),
                 painter = painterResource(id = R.drawable.restartbtn_ic),
                 contentDescription = null,
                 tint = MainGray
@@ -124,14 +147,12 @@ fun LevelTwoMainScreenHeader(
             fontFamily = RalewayFontFamily,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = DarkTextColor
+            color = Black
         )
-        Button(
-            modifier = Modifier.layoutId("closeBtn"),
-            onClick = {},
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp),
-
+        Box(
+            modifier = Modifier
+                .layoutId("closeBtn")
+                .clickable{navController.navigate(Nav.Home.route)},
             ) {
             Icon(
                 painter = painterResource(id = R.drawable.closebtn_ic),
@@ -145,7 +166,9 @@ fun LevelTwoMainScreenHeader(
 @Composable
 fun Questions(
     count: MutableState<Int>,
-    navController: NavHostController
+//    navController: NavHostController,
+    showBtn: MutableState<Boolean>
+
 ){
 
     var items by remember {
@@ -155,8 +178,8 @@ fun Questions(
     }
 
     LazyColumn(
-        modifier = Modifier
-            .height(700.dp)
+
+        modifier =  if(showBtn.value) {Modifier.height(700.dp)} else {Modifier.fillMaxHeight()}
     ) {
 
         items(items.size + 1) { i ->
@@ -165,7 +188,7 @@ fun Questions(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = 2.dp)
                         .border(
                             2.dp,
                             if (items[i].isSelected) BorderTurquoise else BorderGray,
@@ -204,7 +227,7 @@ fun Questions(
                             modifier = Modifier
                                 .padding(all = 8.dp),
                             text = items[i].question,
-                            color = DarkTextColor,
+                            color = if (items[i].isSelected) White else DarkTextColor,
                             fontFamily = RalewayFontFamily,
                             fontWeight = FontWeight.Normal,
                             fontSize = 18.sp,
@@ -215,37 +238,32 @@ fun Questions(
             }
             else{
                 if(count.value >= 5){
-                    Row {
-                        OutlinedButton(
-
-                            onClick = {
-                                navController.navigate("${Nav.LevelsLoad.route}/3")
-                            },
-                            shape = shape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 10.dp, start = 10.dp)
-                                .border(1.dp, BorderTurquoise, shape = shape),
-                            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
-                            contentPadding = PaddingValues(8.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier,
-                                text = "Закончить",
-                                color = Color.White,
-                                fontFamily = RalewayFontFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-
-
-                    }
+//                    Row {
+//                        OutlinedButton(
+//                            onClick = {
+//                                navController.navigate("${Nav.LevelsLoad.route}/3")
+//                            },
+//                            shape = shape,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(end = 10.dp, start = 10.dp)
+//                                .border(1.dp, BorderTurquoise, shape = shape),
+//                            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
+//                            contentPadding = PaddingValues(8.dp)
+//                        ) {
+//                            Text(
+//                                modifier = Modifier,
+//                                text = "Закончить",
+//                                color = Color.White,
+//                                fontFamily = RalewayFontFamily,
+//                                fontWeight = FontWeight.Bold,
+//                                fontSize = 24.sp,
+//                                textAlign = TextAlign.Center
+//                            )
+//                        }
+//                    }
                 }
             }
-
-
         }
     }
 }
