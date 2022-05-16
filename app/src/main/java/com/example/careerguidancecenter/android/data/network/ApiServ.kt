@@ -1,9 +1,12 @@
 package com.example.careerguidancecenter.android.data.network
 
 import com.example.careerguidancecenter.android.domain.models.answer.Answers
+import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAllSkills
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
+import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
 import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.domain.models.questions.Questions
+import com.example.careerguidancecenter.android.domain.models.selectSkills.SelectSkills
 import retrofit2.http.*
 
 interface ApiServ {
@@ -19,5 +22,12 @@ interface ApiServ {
        suspend fun postAnswer(@Body hashMap: HashMap<String, Any>, @Header("token")token:String ):Answers
     @GET("Answer/GetMyAnswers")
        suspend fun getMyAnswers(@Header("token")token:String):GetMyAnswers
+    @POST("Skill/SelectSKills")
+       suspend fun postSelectSkills(@Header("token")token:String,@Body listSkills:MutableList<Int> ):SelectSkills
+    @GET("Skill/GetMySelectSKills")
+       suspend fun getMySelectSkills(@Header("token")token:String):GetMySelectSkills
+    @GET("Skill/GetAllSkills")
+       suspend fun getAllSkills():GetAllSkills
+
 
 }
