@@ -211,10 +211,10 @@ fun SignUp(
 
             if(signInResult.value?.success == true && !isLoad.value){
                 isLoad.value = true
-                println("feffe")
 
                 navHostController.navigate(Nav.Home.route)
 
+                Token = signInResult.value?.value?.token
             }
         }
     }

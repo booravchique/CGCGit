@@ -32,6 +32,8 @@ fun Preview() {
 
 @Composable
 fun Messages(
+    fullCount: Int,
+    progress : MutableState<Float>,
     questionsViewModel: QuestionsViewModel,
     message: MutableState<Message?>,
     isEnd: MutableState<Boolean>,
@@ -48,6 +50,8 @@ fun Messages(
             questionsViewModel.questionsNotAnswer.first{it.id == message.value?.id}
         )
 
+        var questionsCount = questionsViewModel.questions.value?.value?.size ?: 1;
+        progress.value += (1f / questionsCount)
 
         if(!questionsViewModel.questionsNotAnswer.any()){
             isEnd.value = true
@@ -76,7 +80,6 @@ fun Messages(
             verticalArrangement = Arrangement.SpaceBetween,
 
             ) {
-            Spacer(modifier = Modifier.weight(1f))
             LazyColumn(
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier

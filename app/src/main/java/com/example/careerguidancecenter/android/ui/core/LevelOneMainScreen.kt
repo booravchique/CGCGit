@@ -31,6 +31,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.careerguidancecenter.android.R
+import com.example.careerguidancecenter.android.Token
 import com.example.careerguidancecenter.android.domain.models.questions.Questions
 import com.example.careerguidancecenter.android.presentation.QuestionsViewModel
 import com.example.careerguidancecenter.android.ui.Nav
@@ -38,6 +39,7 @@ import com.example.careerguidancecenter.android.ui.core.model.LevelTwoQuestions
 import com.example.careerguidancecenter.android.ui.core.model.Message
 import com.example.careerguidancecenter.android.ui.core.model.Messages
 import com.example.careerguidancecenter.android.ui.theme.*
+import com.example.careerguidancecenter.android.Token
 
 @Composable
 fun LevelOneMainScreenLayout(
@@ -50,7 +52,7 @@ fun LevelOneMainScreenLayout(
             questionsViewModel.questions
         )
     }
-    questionsViewModel.getQuestions("937460b9-ce7d-4ed4-9ac3-1e7b90f9963f")
+    questionsViewModel.getQuestions(Token ?: "")
 
 
     var answers by remember {
@@ -58,7 +60,7 @@ fun LevelOneMainScreenLayout(
             questionsViewModel.answers
         )
     }
-    questionsViewModel.getAnswers("937460b9-ce7d-4ed4-9ac3-1e7b90f9963f")
+    questionsViewModel.getAnswers(Token ?: "")
 
     if(answers.value == null || answers.value == null)
         return
@@ -79,6 +81,11 @@ fun LevelOneMainScreenLayout(
 
     var message : MutableState<Message?> = remember { mutableStateOf(null) }
     var isEnd : MutableState<Boolean> = remember { mutableStateOf(false) }
+
+    var questionsCount = questions.value?.value?.size ?: 1;
+    var questionsNotAnswersCount = questionsNotAnswers?.size ?: 0
+    var progress : MutableState<Float> = remember {
+        mutableStateOf((1f / questionsCount) * (questionsCount - questionsNotAnswersCount)) }
 
     if(!(questionsNotAnswers?.any() ?: false) ){
         isEnd.value = true
@@ -117,6 +124,7 @@ fun LevelOneMainScreenLayout(
                 .layoutId("firstChild")
         ) {
             LevelOneMainScreenHeader(
+                progress,
                 navController
             )
         }
@@ -128,7 +136,7 @@ fun LevelOneMainScreenLayout(
                 .layoutId("middleChild")
                 .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
         ) {
-            Messages(questionsViewModel, message, isEnd)
+            Messages(questionsCount, progress, questionsViewModel, message, isEnd)
         }
         Row(
             modifier = Modifier
@@ -161,6 +169,7 @@ fun LevelOneMainScreenLayout(
 
 @Composable
 fun LevelOneMainScreenHeader(
+    progress : MutableState<Float>,
     navController: NavHostController
 ) {
     val constraints = ConstraintSet {
@@ -210,16 +219,17 @@ fun LevelOneMainScreenHeader(
                 tint = MainGray
             )
         }
-        Box(
+        LinearProgressIndicator(
+            progress = progress.value,
             modifier = Modifier
-                .size(width = 210.dp, height = 30.dp)
-                .border(3.dp, BorderCyan, shape = shape)
+                .size(width = 210.dp, height = 35.dp)
+                .border(0.dp, Color.Transparent, shape = shape)
                 .clip(shape)
-                .background(MainCyan)
+                .background(Color.Transparent)
                 .layoutId("progressBar"),
-        ) {
+            color = MainCyan
+        )
 
-        }
         Button(
             modifier = Modifier.layoutId("closeBtn"),
             onClick = {
@@ -253,7 +263,7 @@ fun LevelOneTextField(
         val hashMap:HashMap<String,Any> = hashMapOf()
         hashMap.put("questionId", questionsViewModel.messages.last().id)
         hashMap.put("content",answer.value)
-        questionsViewModel.postAnswer("937460b9-ce7d-4ed4-9ac3-1e7b90f9963f", hashMap)
+        questionsViewModel.postAnswer(Token ?: "", hashMap)
 
 
         message.value = Message(questionsViewModel.messages.last().id, answer.value, true)

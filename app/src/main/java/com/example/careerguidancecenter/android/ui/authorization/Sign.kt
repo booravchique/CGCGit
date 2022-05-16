@@ -31,6 +31,7 @@ import com.example.careerguidancecenter.android.ui.main.LevelsSection
 import com.example.careerguidancecenter.android.ui.setting.SettingsList
 import com.example.careerguidancecenter.android.ui.setting.model.SettingType
 import com.example.careerguidancecenter.android.ui.theme.BackgroundFillGray
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -38,6 +39,7 @@ import javax.inject.Inject
 @Preview
 @Composable
 fun Sign (){
+    val systemUiController = rememberSystemUiController()
     val navController = rememberNavController()
     val signUpViewModel = hiltViewModel<SignUpViewModel>()
     val signInViewModel = hiltViewModel<SignInViewModel>()
@@ -46,13 +48,25 @@ fun Sign (){
     var startRoute = Nav.SignUp.route
     NavHost(navController = navController, startDestination = startRoute) {
         composable(Nav.SignUp.route){
+            systemUiController.setSystemBarsColor(
+                color = BackgroundFillGray
+            )
+
             SignUp(navController, signInViewModel)
         }
         composable(Nav.SignIn.route){
+            systemUiController.setSystemBarsColor(
+                color = BackgroundFillGray
+            )
+
             SignIn(navController, signUpViewModel)
         }
 
         composable(Nav.Home.route) {
+            systemUiController.setSystemBarsColor(
+                color = BackgroundFillGray
+            )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -82,7 +96,7 @@ fun Sign (){
                 navController.navigate("${Nav.Levels.route}/${levelId}")
             }
 
-            LevelLoad(level = level)
+            LevelLoad(level = level, systemUiController)
         }
         composable(
             route = Nav.Levels.routeWithArgument,
@@ -90,6 +104,10 @@ fun Sign (){
                 navArgument(Nav.Levels.argument0) { type = NavType.IntType }
             )
         ) { backStackEntry ->
+            systemUiController.setSystemBarsColor(
+                color = BackgroundFillGray
+            )
+
             val levelId =
                 backStackEntry.arguments?.getInt(Nav.Levels.argument0) ?: return@composable
             val level = Data.filter { it.Id == levelId }.first()
@@ -102,6 +120,10 @@ fun Sign (){
             arguments = listOf(
                 navArgument(Nav.Settings.argument0) { type = NavType.IntType }
             )) { backStackEntry ->
+            systemUiController.setSystemBarsColor(
+                color = BackgroundFillGray
+            )
+
             val settingId =
                 backStackEntry.arguments?.getInt(Nav.Settings.argument0) ?: return@composable
 
@@ -113,6 +135,11 @@ fun Sign (){
             }
         }
         composable(Nav.Settings.route) {
+            systemUiController.setSystemBarsColor(
+                color = BackgroundFillGray
+            )
+
+
             SettingsList(navController)
         }
         composable(Nav.QuestionLink.route) {

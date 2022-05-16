@@ -245,6 +245,8 @@ fun SignIn(
                 isLoad.value = true
 
                 navHostController.navigate(Nav.Home.route)
+                Token = signUpResult.value?.value?.token
+
             }
         }
     }

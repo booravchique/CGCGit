@@ -50,7 +50,7 @@ private fun Hint(
         modifier = Modifier
             .fillMaxWidth()
             .padding(all = 16.dp)
-            .border(3.dp, MainGray, shape = shape)
+            .border(1.dp, MainGray, shape = shape)
             .clip(shape)
             .background(Color.White),
         contentAlignment = Alignment.Center

@@ -32,7 +32,7 @@ fun DefaultButton(
         shape = shape,
         modifier = Modifier
             .fillMaxWidth()
-            .border(3.dp, btnBorderColor, shape = shape),
+            .border(1.dp, btnBorderColor, shape = shape),
         colors = ButtonDefaults.outlinedButtonColors(backgroundColor = btnBackgroundColor),
         contentPadding = PaddingValues(8.dp)
     ) {

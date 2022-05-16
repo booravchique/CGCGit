@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
+@Preview
 @Composable
 fun LevelThreeMainScreenLayout(
-    navController: NavHostController
+    navController: NavHostController = rememberNavController()
 ) {
     Column(
         modifier = Modifier

@@ -19,11 +19,11 @@ import com.example.careerguidancecenter.android.ui.main.Data
 import com.example.careerguidancecenter.android.ui.main.model.Level
 import com.example.careerguidancecenter.android.ui.theme.MainOrange
 import com.example.careerguidancecenter.android.ui.theme.RalewayFontFamily
-
+import com.google.accompanist.systemuicontroller.SystemUiController
 
 
 @Composable
-fun LevelLoad(level:Level) {
+fun LevelLoad(level:Level, systemUiController: SystemUiController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,6 +31,9 @@ fun LevelLoad(level:Level) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
+        systemUiController.setSystemBarsColor(
+            color = level.Background,
+        )
         LevelTextLayout(level.LevelLabel)
         LevelImageLayout(level.Image)
         LevelTextLayout(level.Name)
