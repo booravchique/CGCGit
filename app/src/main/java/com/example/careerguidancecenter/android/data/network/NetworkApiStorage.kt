@@ -5,6 +5,7 @@ import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAl
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
 import com.example.careerguidancecenter.android.domain.models.getTopProfession.GetTopProfession
+import com.example.careerguidancecenter.android.domain.models.getUser.GetUser
 import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.domain.models.questions.Questions
 import com.example.careerguidancecenter.android.domain.models.selectSkills.SelectSkills
@@ -46,6 +47,10 @@ class NetworkApiStorage(private val retrofit: ApiServ,private val gson: Gson): N
 
     override suspend fun getTopProfession(): GetTopProfession {
         return retrofit.getTopProfession()
+    }
+
+    override suspend fun getUser(token: String): GetUser {
+        return retrofit.getUser(token = token)
     }
 
 

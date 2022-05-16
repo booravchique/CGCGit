@@ -5,6 +5,7 @@ import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAl
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
 import com.example.careerguidancecenter.android.domain.models.getTopProfession.GetTopProfession
+import com.example.careerguidancecenter.android.domain.models.getUser.GetUser
 import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.domain.models.questions.Questions
 import com.example.careerguidancecenter.android.domain.models.selectSkills.SelectSkills
@@ -31,6 +32,8 @@ interface ApiServ {
        suspend fun getAllSkills():GetAllSkills
     @GET("Profession/GetTopProfession")
        suspend fun getTopProfession():GetTopProfession
+    @GET("User/Get")
+       suspend fun getUser(token: String):GetUser
 
 
 }
