@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.careerguidancecenter.android.common.Resource
+import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.domain.usecases.SIgnUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,22 +21,23 @@ class SignUpViewModel @Inject constructor(
 ) :ViewModel() {
 
 
-     val success  = MutableLiveData<Boolean>()
-
-    private var _errorLiveData = MutableLiveData<String>()
-    var errorLiveData: LiveData<String> = _errorLiveData
+    val signUpResult = MutableLiveData<SignUpBackResult?>()
+    var errorLiveData = MutableLiveData<String>()
 
     fun signUp(hashMap: HashMap<String,String>){
         viewModelScope.launch {
             val result = sIgnUpUseCase.execute(hashMap)
             when(result){
                 is Resource.Error -> {
-                    _errorLiveData.value = result.message!!
+                    signUpResult.value = result.data
+                    errorLiveData.value = result.message!!
                     Log.i("LiveDataError", result.message)
+                    Log.i("LiveDataError", result.data.toString())
+
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
-                    success.value = result.data?.success
+                    signUpResult.value = result.data
                 }
             }
         }

@@ -6,9 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.careerguidancecenter.android.common.Resource
+import com.example.careerguidancecenter.android.domain.models.answer.Answers
+import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
+import com.example.careerguidancecenter.android.domain.models.questions.Questions
+import com.example.careerguidancecenter.android.domain.models.questions.Value
 import com.example.careerguidancecenter.android.domain.usecases.AnswerUseCase
 import com.example.careerguidancecenter.android.domain.usecases.GetMyAnswersUseCase
 import com.example.careerguidancecenter.android.domain.usecases.QuestionsUseCase
+import com.example.careerguidancecenter.android.ui.core.model.Message
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,10 +25,18 @@ class QuestionsViewModel
         private val answerUseCase: AnswerUseCase,
         private val getMyAnswersUseCase: GetMyAnswersUseCase
     ):ViewModel() {
-    val result2 = MutableLiveData<String>()
-    val result3 = MutableLiveData<String>()
-    val result4 = MutableLiveData<String>()
+    val questions = MutableLiveData<Questions?>()
+    val answers = MutableLiveData<GetMyAnswers?>()
 
+
+    val messages: MutableList<Message> = mutableListOf()
+
+    val questionsNotAnswer: MutableList<Value> = mutableListOf()
+
+    fun setQuestionsNotAnswer(qufestionsNotAnswer: List<Value>){
+        questionsNotAnswer.clear()
+        questionsNotAnswer.addAll(qufestionsNotAnswer)
+    }
     private var _errorLiveData = MutableLiveData<String>()
     var errorLiveData: LiveData<String> = _errorLiveData
 
@@ -33,16 +46,19 @@ class QuestionsViewModel
             val result = questionsUseCase.execute(token)
             when(result){
                 is Resource.Error -> {
+                    questions.value = result.data
                     _errorLiveData.value = result.message!!
                     Log.i("LiveDataError", result.message)
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
-                    result2.value = result.data?.value.toString()
+                    questions.value = result.data
                 }
             }
         }
     }
+
+    val answer = MutableLiveData<Answers?>()
 
     fun postAnswer(token:String,hashMap: HashMap<String,Any>){
         viewModelScope.launch {
@@ -54,7 +70,7 @@ class QuestionsViewModel
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
-                    result3.value = result.data?.success.toString()
+                    answer.value = result.data
                 }
             }
         }
@@ -64,12 +80,13 @@ class QuestionsViewModel
             val result = getMyAnswersUseCase.execute(token)
             when(result){
                 is Resource.Error -> {
+                    answers.value = result.data
                     _errorLiveData.value = result.message!!
                     Log.i("LiveDataError", result.message)
                 }
                 is Resource.Success -> {
                     Log.d("Result", result.data.toString())
-                    result4.value = result.data?.toString()
+                    answers.value = result.data
                 }
             }
         }

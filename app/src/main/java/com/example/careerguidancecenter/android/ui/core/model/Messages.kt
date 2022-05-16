@@ -1,6 +1,7 @@
 package com.example.careerguidancecenter.android.ui.core.model
 
-data class Messages(
+data class Message(
+    val id: Int,
     val content: String,
-    val classification: Boolean
+    val isAnswer: Boolean
 )

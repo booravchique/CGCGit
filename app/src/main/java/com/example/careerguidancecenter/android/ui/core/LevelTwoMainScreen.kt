@@ -6,10 +6,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -17,7 +18,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,31 +29,41 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.careerguidancecenter.android.R
+import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.core.model.LevelTwoQuestions
+import com.example.careerguidancecenter.android.ui.core.model.Message
 import com.example.careerguidancecenter.android.ui.theme.*
 
 
+@Preview
 @Composable
 fun LevelTwoMainScreenLayout(
-    navController: NavHostController
+    navController: NavHostController = rememberNavController()
 ) {
-    var count: Int = Questions()
+    var count : MutableState<Int> = remember { mutableStateOf(0) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundFillGray)
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        LevelTwoMainScreenHeader()
-        Questions()
+        LevelTwoMainScreenHeader(count)
+
+        Questions(count, navController)
+
+
+
+
     }
 }
 
 
 @Composable
 fun LevelTwoMainScreenHeader(
-
+    count: MutableState<Int>
 ) {
     val constraints = ConstraintSet {
         val closeBtn = createRefFor("closeBtn")
@@ -107,7 +120,7 @@ fun LevelTwoMainScreenHeader(
         Text(
             modifier = Modifier
                 .layoutId("counting"),
-            text = "Выбрано 5/5",
+            text = "Выбрано ${count.value}/5",
             fontFamily = RalewayFontFamily,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -130,7 +143,10 @@ fun LevelTwoMainScreenHeader(
 }
 
 @Composable
-fun Questions(): Int {
+fun Questions(
+    count: MutableState<Int>,
+    navController: NavHostController
+){
 
     var items by remember {
         mutableStateOf(
@@ -138,57 +154,98 @@ fun Questions(): Int {
         )
     }
 
-    var count by remember {
-        mutableStateOf(0)
-    }
-
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
+            .height(700.dp)
     ) {
 
-        items(items.size) { i ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-                    .border(
-                        2.dp,
-                        if (items[i].isSelected) BorderTurquoise else BorderGray,
-                        shape = shape
-                    )
-                    .clip(shape)
-                    .background(if (items[i].isSelected) MainTurquoise else Color.White)
-                    .clickable {
-                        items = items.mapIndexed { j, item ->
-                            if (i == j) {
-                                item.copy(isSelected = !item.isSelected)
+        items(items.size + 1) { i ->
 
-                            } else item
-                        }
-
-                        Log.d("asd", "count: $count")
-                    },
-
-                ) {
-                Row(
+            if(i < items.size){
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {
-                    Text(
+                        .padding(vertical = 8.dp)
+                        .border(
+                            2.dp,
+                            if (items[i].isSelected) BorderTurquoise else BorderGray,
+                            shape = shape
+                        )
+                        .clip(shape)
+                        .background(if (items[i].isSelected) MainTurquoise else Color.White)
+                        .clickable {
+                            items = items.mapIndexed { j, item ->
+                                if (i == j) {
+                                    if(item.isSelected){
+                                        count.value--
+                                        item.copy(isSelected = !item.isSelected)
+                                    }
+                                    else{
+                                        if(count.value < 5){
+                                            count.value++
+                                            item.copy(isSelected = !item.isSelected)
+                                        }
+                                        else{
+                                            item
+                                        }
+                                    }
+                                } else item
+                            }
+
+                            Log.d("asd", "count: $count")
+                        },
+
+                    ) {
+                    Row(
                         modifier = Modifier
-                            .padding(all = 8.dp),
-                        text = items[i].question,
-                        color = DarkTextColor,
-                        fontFamily = RalewayFontFamily,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Start
-                    )
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(all = 8.dp),
+                            text = items[i].question,
+                            color = DarkTextColor,
+                            fontFamily = RalewayFontFamily,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Start
+                        )
+                    }
                 }
             }
+            else{
+                if(count.value >= 5){
+                    Row {
+                        OutlinedButton(
+
+                            onClick = {
+                                navController.navigate("${Nav.LevelsLoad.route}/3")
+                            },
+                            shape = shape,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 10.dp, start = 10.dp)
+                                .border(1.dp, BorderTurquoise, shape = shape),
+                            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
+                            contentPadding = PaddingValues(8.dp)
+                        ) {
+                            Text(
+                                modifier = Modifier,
+                                text = "Закончить",
+                                color = Color.White,
+                                fontFamily = RalewayFontFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
+
+                    }
+                }
+            }
+
+
         }
     }
-    count = items.count {it.isSelected}
-    return count
 }

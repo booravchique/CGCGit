@@ -6,10 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +27,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.careerguidancecenter.android.Token
+import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.network.model.ServiceResultGeneric
 import com.example.careerguidancecenter.android.network.model.SignResult
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
@@ -46,10 +46,14 @@ fun SignUp(
 
 ) {
 
+    var errorLiveData : State<String?> = viewModel.errorLiveData.observeAsState()
+    var signInResult : State<SignUpBackResult?> = viewModel.signInResult.observeAsState()
+
+
     val shape = RoundedCornerShape(10.dp)
 
-    var fullName = remember { mutableStateOf("") }
-    var password = remember { mutableStateOf("") }
+    var fullName = remember { mutableStateOf("dimastd333@gmail.com") }
+    var password = remember { mutableStateOf("QAZqaz_123") }
 
     val constraints = ConstraintSet {
         val firstChild = createRefFor("firstChild")
@@ -86,7 +90,7 @@ fun SignUp(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = "РЕГИСТРАЦИЯ",
+                    text = "ВХОД",
                     color = DarkTextColor,
                     fontFamily = RalewayFontFamily,
                     fontWeight = FontWeight.Bold,
@@ -130,11 +134,15 @@ fun SignUp(
                     onClick = {
                         val login = fullName.value
                         val password = password.value
+                        if(password == null ||
+                            fullName == null)
+                            return@OutlinedButton
 
-
-
-                        navHostController.navigate(Nav.Home.route)
-                    },
+                        val hashMap:HashMap<String, String> = hashMapOf()
+                        hashMap.put("password", password)
+                        hashMap.put("email", login)
+                        viewModel.signIn(hashMap)
+                              },
                     shape = shape,
                     colors = ButtonDefaults.outlinedButtonColors(
                         backgroundColor = MainCyan
@@ -168,6 +176,17 @@ fun SignUp(
                         color = MainGray
                     )
                 }
+
+                if(errorLiveData.value != null || signInResult.value?.success == false){
+
+                    signInResult.value?.errors?.forEach{
+                        Text(
+
+                            text = it.name,
+                            color = MainGray
+                        )
+                    }
+                }
             }
 
             OutlinedButton(
@@ -186,6 +205,16 @@ fun SignUp(
                     text = "У вас нет учетной записи? Создайте ее!",
                     color = MainGray
                 )
+            }
+
+            var isLoad = remember{ mutableStateOf(false)}
+
+            if(signInResult.value?.success == true && !isLoad.value){
+                isLoad.value = true
+                println("feffe")
+
+                navHostController.navigate(Nav.Home.route)
+
             }
         }
     }

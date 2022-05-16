@@ -1,12 +1,14 @@
 package com.example.careerguidancecenter.android.ui.core.model
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.careerguidancecenter.android.presentation.QuestionsViewModel
 import com.example.careerguidancecenter.android.ui.theme.*
 
 
@@ -25,29 +28,83 @@ val outgoingMsgShape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bott
 @Preview
 @Composable
 fun Preview() {
-    Messages(
-        msgInc = MsgContent().msgs
-    )
 }
 
 @Composable
 fun Messages(
-    msgInc: List<Messages>
+    questionsViewModel: QuestionsViewModel,
+    message: MutableState<Message?>,
+    isEnd: MutableState<Boolean>,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 60.dp, start = 8.dp, end = 8.dp),
-    ) {
-        items(msgInc.size) {
-            val msg = msgInc[it].content
-            if (msgInc[it].classification == false) {
-                IncomingMsgLayout(msg)
-            } else {
-                OutgoingMsgLayout(msg)
-            }
+
+
+    if(message.value != null){
+
+        Log.i("LiveDataError", questionsViewModel.questionsNotAnswer.toString())
+        println("feffef")
+        questionsViewModel.messages.add(message.value ?: Message(-1, "", true))
+
+        questionsViewModel.questionsNotAnswer.remove(
+            questionsViewModel.questionsNotAnswer.first{it.id == message.value?.id}
+        )
+
+
+        if(!questionsViewModel.questionsNotAnswer.any()){
+            isEnd.value = true
+        }
+        else{
+            val next = questionsViewModel.questionsNotAnswer.first()
+            questionsViewModel.messages.add(Message(next.id, next.cultureLabel.text, false))
+
+
+            message.value = null
+
         }
     }
+
+
+
+    println("fefhuefheff")
+
+
+
+
+    Box(
+        contentAlignment = Alignment.Center
+    ){
+        Column(
+            verticalArrangement = Arrangement.SpaceBetween,
+
+            ) {
+            Spacer(modifier = Modifier.weight(1f))
+            LazyColumn(
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .padding(bottom = 60.dp, start = 8.dp, end = 8.dp),
+            ) {
+
+                items(questionsViewModel.messages.size) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1f, false)
+                    ) {
+                        val msg = questionsViewModel.messages[it].content
+                        if (questionsViewModel.messages[it].isAnswer == false) {
+                            IncomingMsgLayout(msg)
+                        } else {
+                            OutgoingMsgLayout(msg)
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
+
 }
 
 @Composable

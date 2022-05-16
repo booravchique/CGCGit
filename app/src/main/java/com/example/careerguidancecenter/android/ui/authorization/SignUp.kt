@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,7 +26,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.example.careerguidancecenter.android.Token
+import com.example.careerguidancecenter.android.domain.models.sign.SignUpBackResult
 import com.example.careerguidancecenter.android.network.model.SignInInfo
 import com.example.careerguidancecenter.android.network.model.SignUpInfo
 import com.example.careerguidancecenter.android.presentation.SignInViewModel
@@ -69,6 +74,10 @@ fun SignIn(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
+        var errorLiveData : State<String?> = viewModel.errorLiveData.observeAsState()
+        var signUpResult : State<SignUpBackResult?> = viewModel.signUpResult.observeAsState()
+
         ConstraintLayout(
             constraints,
             modifier = Modifier.fillMaxSize()
@@ -80,7 +89,7 @@ fun SignIn(
             ) {
                 Text(
                     modifier = Modifier.padding(bottom = 16.dp),
-                    text = "ВХОД",
+                    text = "РЕГИСТРАЦИЯ",
                     color = DarkTextColor,
                     fontFamily = RalewayFontFamily,
                     fontWeight = FontWeight.Bold,
@@ -151,27 +160,19 @@ fun SignIn(
                     modifier = Modifier
                         .padding(top = 30.dp),
                     onClick = {
+                        val password = password.value
                         val email = email.value
                         val fullName = fullname.value
-                        val password = password.value
+                        if(password != confirmpassword.value ||
+                            email == null ||
+                            fullName == null)
+                            return@OutlinedButton
+
                         val hashMap:HashMap<String, String> = hashMapOf()
                         hashMap.put("fullName", fullName)
                         hashMap.put("password", password)
                         hashMap.put("email", email)
                         viewModel.signUp(hashMap)
-
-                     //   val result by viewModel.success.observe
-//                        viewModel.success.observe(**viewLifecycleOwner**) {
-//                            if (it){
-//                                navHostController.navigate(Nav.Home.route)
-//                            }
-//                            else{
-//                                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
-//                            }
-//
-//                        }
-
-
 
                     },
                     shape = shape,
@@ -207,6 +208,17 @@ fun SignIn(
                         color = MainGray
                     )
                 }
+
+                if(errorLiveData.value != null || signUpResult.value?.success == false){
+
+                    signUpResult.value?.errors?.forEach{
+                        Text(
+
+                            text = it.name,
+                            color = MainGray
+                        )
+                    }
+                }
             }
 
             OutlinedButton(
@@ -226,6 +238,13 @@ fun SignIn(
                     text = "Вы уже зарегистрированы? Войдите!",
                     color = MainGray
                 )
+            }
+
+            var isLoad = remember{ mutableStateOf(false)}
+            if(signUpResult.value?.success == true && !isLoad.value){
+                isLoad.value = true
+
+                navHostController.navigate(Nav.Home.route)
             }
         }
     }
