@@ -1,6 +1,7 @@
 package com.example.careerguidancecenter.android.data.network
 
 import com.example.careerguidancecenter.android.domain.models.answer.Answers
+import com.example.careerguidancecenter.android.domain.models.changePassword.ChangePassword
 import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAllSkills
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
@@ -25,15 +26,18 @@ interface ApiServ {
     @GET("Answer/GetMyAnswers")
        suspend fun getMyAnswers(@Header("token")token:String):GetMyAnswers
     @POST("Skill/SelectSKills")
-       suspend fun postSelectSkills(@Header("token")token:String,@Body listSkills:MutableList<Int> ):SelectSkills
+       suspend fun postSelectSkills(@Header("token")token:String,@Body listSkills:List<Int> ):SelectSkills
     @GET("Skill/GetMySelectSKills")
        suspend fun getMySelectSkills(@Header("token")token:String):GetMySelectSkills
     @GET("Skill/GetAllSkills")
-       suspend fun getAllSkills():GetAllSkills
+       suspend fun getAllSkills(@Header("token")token:String):GetAllSkills
     @GET("Profession/GetTopProfession")
-       suspend fun getTopProfession():GetTopProfession
+       suspend fun getTopProfession(@Header("token")token:String):GetTopProfession
     @GET("User/Get")
-       suspend fun getUser(token: String):GetUser
-
+       suspend fun getUser(@Header("token")token:String):GetUser
+    @POST("User/ChangePassword")
+       suspend fun changePassword(@Header("token")token:String,@Query("password")password:String):ChangePassword
+    @GET("Profession/GetProfession")
+    suspend fun getProfession(@Header("token")token:String,@Query("id")id:Int):GetTopProfession
 
 }
