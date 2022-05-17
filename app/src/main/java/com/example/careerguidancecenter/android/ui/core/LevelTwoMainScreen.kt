@@ -48,15 +48,8 @@ fun LevelTwoMainScreenLayout(
     navController: NavHostController = rememberNavController(),
     skillsVIewModel: SkillsVIewModel
 ) {
-    var count: MutableState<Int> = remember { mutableStateOf(0) }
-    var showBtn: MutableState<Boolean> = remember { mutableStateOf(false) }
-    if (count.value == 5) {
-        showBtn.value = true
-    } else {
-        showBtn.value = false
-    }
 
-    var selectItems by remember {
+    val selectItems by remember {
         mutableStateOf(
             skillsVIewModel.mySelectSkills
         )
@@ -64,17 +57,25 @@ fun LevelTwoMainScreenLayout(
     if(selectItems.value == null)
         return
 
-    var items = remember {
+    var count: MutableState<Int> = remember { mutableStateOf(selectItems.value?.value?.size ?: 0) }
+    var showBtn: MutableState<Boolean> = remember { mutableStateOf(false) }
+    if (count.value == 5) {
+        showBtn.value = true
+    } else {
+        showBtn.value = false
+    }
+
+    val items = remember {
         mutableStateOf(
             skillsVIewModel.allSkills.value?.value?.map
             {
-                var iii = it.id
+                val iii = it.id
                 LevelTwoQuestion(it.cultureLabel.text,  selectItems.value?.value?.any { it == iii } ?: false, it.id)
             }
         )
     }
 
-    if(items == null)
+    if(items.value == null)
         return
 
 
@@ -87,6 +88,7 @@ fun LevelTwoMainScreenLayout(
         LevelTwoMainScreenHeader(count, navController)
         Questions(count,showBtn, items)
         if(showBtn.value) ТextLevelButton(showBtn, navController, skillsVIewModel, items)
+
 
     }
 }
@@ -102,7 +104,7 @@ fun ТextLevelButton(
         OutlinedButton(
             onClick = {
                 skillsVIewModel.selectSkills(Token ?: "", items.value!!.map{ it.id })
-                navController.navigate("${Nav.LevelsLoad.route}/3")
+                navController.navigate("${Nav.LevelsLoad.route}/4")
             },
             shape = shape,
             modifier = Modifier
