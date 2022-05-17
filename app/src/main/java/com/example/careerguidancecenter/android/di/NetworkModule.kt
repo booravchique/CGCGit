@@ -123,6 +123,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideChangePassword(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):ChangePasswordRepository{
+        return ChangePasswordRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+    @Provides
+    @Singleton
+    fun provideGetProfession(networkStorage:NetworkStorage,gson: Gson,@IoDispatcher dispatcher: CoroutineDispatcher):GetProfessionRepository{
+        return GetProfessionRepositoryImpl(networkStorage,gson,dispatcher)
+    }
+
+    @Provides
+    @Singleton
     fun provideApiService(okHttpClient: OkHttpClient): ApiService {
         return ApiService(okHttpClient, "https://fm.tringle.org/api")
     }

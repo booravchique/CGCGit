@@ -1,6 +1,7 @@
 package com.example.careerguidancecenter.android.data.network
 
 import com.example.careerguidancecenter.android.domain.models.answer.Answers
+import com.example.careerguidancecenter.android.domain.models.changePassword.ChangePassword
 import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAllSkills
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
@@ -51,6 +52,14 @@ class NetworkApiStorage(private val retrofit: ApiServ,private val gson: Gson): N
 
     override suspend fun getUser(token: String): GetUser {
         return retrofit.getUser(token = token)
+    }
+
+    override suspend fun changePassword(token: String, password: String): ChangePassword {
+        return  retrofit.changePassword(token = token,password = password)
+    }
+
+    override suspend fun getProfession(token: String, id: Int): GetTopProfession {
+        return retrofit.getProfession(token=token,id = id)
     }
 
 

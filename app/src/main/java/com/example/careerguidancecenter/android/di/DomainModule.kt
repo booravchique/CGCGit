@@ -51,4 +51,14 @@ class DomainModule {
     fun provideAllSelectSkills(repository: GetAllSkillsRepository): GetAllSkillsUseCase{
         return GetAllSkillsUseCase(repository)
     }
+
+    @Provides
+    fun provideChangePassword(repository: ChangePasswordRepository):ChangePasswordUseCase{
+        return ChangePasswordUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetProfession(repository:GetProfessionRepository):GetProfessionUseCase{
+        return GetProfessionUseCase(repository)
+    }
 }

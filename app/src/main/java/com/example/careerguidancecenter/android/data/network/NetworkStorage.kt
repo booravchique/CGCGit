@@ -1,6 +1,7 @@
 package com.example.careerguidancecenter.android.data.network
 
 import com.example.careerguidancecenter.android.domain.models.answer.Answers
+import com.example.careerguidancecenter.android.domain.models.changePassword.ChangePassword
 import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAllSkills
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
@@ -21,4 +22,6 @@ interface NetworkStorage {
     suspend fun getAllSKills():GetAllSkills
     suspend fun getTopProfession():GetTopProfession
     suspend fun getUser(token: String):GetUser
+    suspend fun changePassword(token: String,password:String):ChangePassword
+    suspend fun getProfession(token: String,id:Int):GetTopProfession
 }
