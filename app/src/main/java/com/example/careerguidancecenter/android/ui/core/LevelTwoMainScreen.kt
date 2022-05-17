@@ -60,17 +60,17 @@ fun LevelTwoMainScreenLayout(
     ) {
         LevelTwoMainScreenHeader(count, navController)
         Questions(count, showBtn)
-        if (showBtn.value) ТextLevelButton(/*navController*/)
+        if (showBtn.value) ТextLevelButton(showBtn, navController)
 
     }
 }
 
 @Composable
-fun ТextLevelButton(/*navController: NavHostController*/) {
+fun ТextLevelButton(showBtn: MutableState<Boolean>, navController: NavHostController) {
     Row {
         OutlinedButton(
             onClick = {
-//                navController.navigate("${Nav.LevelsLoad.route}/3")
+                navController.navigate("${Nav.LevelsLoad.route}/3")
             },
             shape = shape,
             modifier = Modifier
