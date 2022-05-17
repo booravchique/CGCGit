@@ -44,9 +44,13 @@ import com.example.careerguidancecenter.android.ui.theme.*
 fun LevelTwoMainScreenLayout(
     navController: NavHostController = rememberNavController()
 ) {
-    var count : MutableState<Int> = remember { mutableStateOf(0) }
-    var showBtn : MutableState<Boolean> = remember { mutableStateOf(false) }
-    if(count.value == 5) {showBtn.value = true} else {showBtn.value = false}
+    var count: MutableState<Int> = remember { mutableStateOf(0) }
+    var showBtn: MutableState<Boolean> = remember { mutableStateOf(false) }
+    if (count.value == 5) {
+        showBtn.value = true
+    } else {
+        showBtn.value = false
+    }
 
     Column(
         modifier = Modifier
@@ -55,38 +59,36 @@ fun LevelTwoMainScreenLayout(
             .padding(start = 16.dp, end = 16.dp)
     ) {
         LevelTwoMainScreenHeader(count, navController)
-        Questions(count,showBtn)
-        if(showBtn.value) ТextLevelButton(showBtn, navController)
+        Questions(count, showBtn)
+        if (showBtn.value) ТextLevelButton(/*navController*/)
 
     }
 }
 
 @Composable
-fun ТextLevelButton(showBtn: MutableState<Boolean>, navController: NavHostController) {
-    if(showBtn.value) {
-        Row {
-            OutlinedButton(
-                onClick = {
-                    navController.navigate("${Nav.LevelsLoad.route}/3")
-                },
-                shape = shape,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 10.dp, start = 10.dp)
-                    .border(1.dp, BorderTurquoise, shape = shape),
-                colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
-                contentPadding = PaddingValues(8.dp)
-            ) {
-                Text(
-                    modifier = Modifier.padding(bottom = 6.dp),
-                    text = "Закончить",
-                    color = Color.White,
-                    fontFamily = RalewayFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+fun ТextLevelButton(/*navController: NavHostController*/) {
+    Row {
+        OutlinedButton(
+            onClick = {
+//                navController.navigate("${Nav.LevelsLoad.route}/3")
+            },
+            shape = shape,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 10.dp, start = 10.dp)
+                .border(1.dp, BorderTurquoise, shape = shape),
+            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            Text(
+                modifier = Modifier.padding(bottom = 6.dp),
+                text = "Закончить",
+                color = Color.White,
+                fontFamily = RalewayFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -132,8 +134,8 @@ fun LevelTwoMainScreenHeader(
         Box(
             modifier = Modifier
                 .layoutId("restartBtn")
-                .clickable {  },
-            ) {
+                .clickable { },
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.restartbtn_ic),
                 contentDescription = null,
@@ -152,8 +154,8 @@ fun LevelTwoMainScreenHeader(
         Box(
             modifier = Modifier
                 .layoutId("closeBtn")
-                .clickable{navController.navigate(Nav.Home.route)},
-            ) {
+                .clickable { navController.navigate(Nav.Home.route) },
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.closebtn_ic),
                 contentDescription = null,
@@ -169,22 +171,22 @@ fun Questions(
 //    navController: NavHostController,
     showBtn: MutableState<Boolean>
 
-){
-
+) {
     var items by remember {
         mutableStateOf(
             LevelTwoQuestions().questions
         )
     }
-
     LazyColumn(
-
-        modifier =  if(showBtn.value) {Modifier.height(700.dp)} else {Modifier.fillMaxHeight()}
+        modifier = if (showBtn.value) {
+            Modifier.height(700.dp)
+        } else {
+            Modifier.fillMaxHeight()
+        }
     ) {
 
         items(items.size + 1) { i ->
-
-            if(i < items.size){
+            if (i < items.size) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -199,16 +201,14 @@ fun Questions(
                         .clickable {
                             items = items.mapIndexed { j, item ->
                                 if (i == j) {
-                                    if(item.isSelected){
+                                    if (item.isSelected) {
                                         count.value--
                                         item.copy(isSelected = !item.isSelected)
-                                    }
-                                    else{
-                                        if(count.value < 5){
+                                    } else {
+                                        if (count.value < 5) {
                                             count.value++
                                             item.copy(isSelected = !item.isSelected)
-                                        }
-                                        else{
+                                        } else {
                                             item
                                         }
                                     }
@@ -235,9 +235,8 @@ fun Questions(
                         )
                     }
                 }
-            }
-            else{
-                if(count.value >= 5){
+            } else {
+                if (count.value >= 5) {
 //                    Row {
 //                        OutlinedButton(
 //                            onClick = {
