@@ -17,10 +17,10 @@ interface NetworkStorage {
     suspend fun questions(token:String):Questions
     suspend fun answers(hashMap: HashMap<String,Any>,token: String):Answers
     suspend fun getMyAnswers(token:String):GetMyAnswers
-    suspend fun selectSkills(token: String,listSkills: MutableList<Int>):SelectSkills
+    suspend fun selectSkills(token: String,listSkills: List<Int>):SelectSkills
     suspend fun getMySelectSkills(token: String):GetMySelectSkills
-    suspend fun getAllSKills():GetAllSkills
-    suspend fun getTopProfession():GetTopProfession
+    suspend fun getAllSKills(token: String):GetAllSkills
+    suspend fun getTopProfession(token: String):GetTopProfession
     suspend fun getUser(token: String):GetUser
     suspend fun changePassword(token: String,password:String):ChangePassword
     suspend fun getProfession(token: String,id:Int):GetTopProfession

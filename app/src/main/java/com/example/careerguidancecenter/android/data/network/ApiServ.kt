@@ -1,7 +1,6 @@
 package com.example.careerguidancecenter.android.data.network
 
 import com.example.careerguidancecenter.android.domain.models.answer.Answers
-import com.example.careerguidancecenter.android.domain.models.changePassword.ChangePassword
 import com.example.careerguidancecenter.android.domain.models.getAllSkills.GetAllSkills
 import com.example.careerguidancecenter.android.domain.models.getMyAnswers.GetMyAnswers
 import com.example.careerguidancecenter.android.domain.models.getMySelectSkills.GetMySelectSkills
@@ -34,12 +33,7 @@ interface ApiServ {
     @GET("Profession/GetTopProfession")
        suspend fun getTopProfession():GetTopProfession
     @GET("User/Get")
-       suspend fun getUser(@Header("token")token: String):GetUser
-    @POST("User/ChangePassword")
-       suspend fun changePassword(@Header("token")token: String,@Query("password") password:String):ChangePassword
-    @GET("Profession/GetProfession")
-        suspend fun getProfession(@Header("token") token: String,@Query("id") id:Int):GetTopProfession
-
+       suspend fun getUser(token: String):GetUser
 
 
 }

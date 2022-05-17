@@ -34,7 +34,7 @@ class NetworkApiStorage(private val retrofit: ApiServ,private val gson: Gson): N
         return retrofit.getMyAnswers(token = token)
     }
 
-    override suspend fun selectSkills(token: String, listSkills: MutableList<Int>):SelectSkills {
+    override suspend fun selectSkills(token: String, listSkills: List<Int>):SelectSkills {
         return retrofit.postSelectSkills(token = token, listSkills = listSkills)
     }
 
@@ -42,12 +42,12 @@ class NetworkApiStorage(private val retrofit: ApiServ,private val gson: Gson): N
         return retrofit.getMySelectSkills(token = token)
     }
 
-    override suspend fun getAllSKills(): GetAllSkills {
-        return retrofit.getAllSkills()
+    override suspend fun getAllSKills(token: String): GetAllSkills {
+        return retrofit.getAllSkills(token)
     }
 
-    override suspend fun getTopProfession(): GetTopProfession {
-        return retrofit.getTopProfession()
+    override suspend fun getTopProfession(token: String): GetTopProfession {
+        return retrofit.getTopProfession(token)
     }
 
     override suspend fun getUser(token: String): GetUser {

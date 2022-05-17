@@ -10,7 +10,7 @@ class GetAllSkillsUseCase
     @Inject constructor(
         private val repository:GetAllSkillsRepository
     ){
-    suspend fun execute():Resource<GetAllSkills>{
-        return repository.getAllSkillsRep()
+    suspend fun execute(token: String):Resource<GetAllSkills>{
+        return repository.getAllSkillsRep(token)
     }
 }
