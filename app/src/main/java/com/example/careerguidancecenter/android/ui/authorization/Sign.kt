@@ -22,6 +22,7 @@ import com.example.careerguidancecenter.android.Token
 import com.example.careerguidancecenter.android.presentation.QuestionsViewModel
 import com.example.careerguidancecenter.android.presentation.SignInViewModel
 import com.example.careerguidancecenter.android.presentation.SignUpViewModel
+import com.example.careerguidancecenter.android.presentation.SkillsVIewModel
 import com.example.careerguidancecenter.android.ui.Nav
 import com.example.careerguidancecenter.android.ui.core.*
 import com.example.careerguidancecenter.android.ui.core.model.HintData
@@ -34,6 +35,7 @@ import com.example.careerguidancecenter.android.ui.theme.BackgroundFillGray
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 @Preview
@@ -44,7 +46,9 @@ fun Sign (){
     val signUpViewModel = hiltViewModel<SignUpViewModel>()
     val signInViewModel = hiltViewModel<SignInViewModel>()
     val questionsViewModel = hiltViewModel<QuestionsViewModel>()
-    println("dvddv")
+    val skillsVIewModel = hiltViewModel<SkillsVIewModel>()
+
+
     var startRoute = Nav.SignUp.route
     NavHost(navController = navController, startDestination = startRoute) {
         composable(Nav.SignUp.route){
@@ -84,6 +88,17 @@ fun Sign (){
         ) { backStackEntry ->
             val levelId =
                 backStackEntry.arguments?.getInt(Nav.LevelsLoad.argument0) ?: return@composable
+
+            when(levelId){
+                1 -> {
+                    questionsViewModel.getQuestions(Token ?: "")
+                    questionsViewModel.getAnswers(Token ?: "")
+                }
+                2 -> {
+                    skillsVIewModel.getMySkills(Token ?: "")
+                    skillsVIewModel.getAllSkills(Token ?: "")
+                }
+            }
             val level = Data.filter { it.Id == levelId }.first()
 
 
@@ -147,7 +162,7 @@ fun Sign (){
         }
 
         composable(Nav.ChoiceLink.route) {
-            LevelTwoMainScreenLayout(navController)
+            LevelTwoMainScreenLayout(navController, skillsVIewModel)
         }
 
         composable(Nav.ProfessionsLink.route) {

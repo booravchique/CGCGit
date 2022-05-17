@@ -16,10 +16,10 @@ class GetMyAllSkillsRepositoryImpl
         private val gson: Gson,
         @IoDispatcher private val dispatcher: CoroutineDispatcher
     ):GetAllSkillsRepository {
-    override suspend fun getAllSkillsRep(): Resource<GetAllSkills> {
+    override suspend fun getAllSkillsRep(token: String): Resource<GetAllSkills> {
       return  withContext(dispatcher){
             try {
-                val result = storage.getAllSKills()
+                val result = storage.getAllSKills(token)
                 if (result.success){
                     Resource.Success(result)
                 }

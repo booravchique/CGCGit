@@ -33,20 +33,46 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.careerguidancecenter.android.R
+import com.example.careerguidancecenter.android.Token
+import com.example.careerguidancecenter.android.presentation.SkillsVIewModel
 import com.example.careerguidancecenter.android.ui.Nav
+import com.example.careerguidancecenter.android.ui.core.model.LevelTwoQuestion
 import com.example.careerguidancecenter.android.ui.core.model.LevelTwoQuestions
 import com.example.careerguidancecenter.android.ui.core.model.Message
 import com.example.careerguidancecenter.android.ui.theme.*
 
 
-@Preview
+
 @Composable
 fun LevelTwoMainScreenLayout(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    skillsVIewModel: SkillsVIewModel
 ) {
     var count : MutableState<Int> = remember { mutableStateOf(0) }
     var showBtn : MutableState<Boolean> = remember { mutableStateOf(false) }
     if(count.value == 5) {showBtn.value = true} else {showBtn.value = false}
+
+    var selectItems by remember {
+        mutableStateOf(
+            skillsVIewModel.mySelectSkills
+        )
+    }
+    if(selectItems.value == null)
+        return
+
+    var items = remember {
+        mutableStateOf(
+            skillsVIewModel.allSkills.value?.value?.map
+            {
+                var iii = it.id
+                LevelTwoQuestion(it.cultureLabel.text,  selectItems.value?.value?.any { it == iii } ?: false, it.id)
+            }
+        )
+    }
+
+    if(items == null)
+        return
+
 
     Column(
         modifier = Modifier
@@ -55,18 +81,25 @@ fun LevelTwoMainScreenLayout(
             .padding(start = 16.dp, end = 16.dp)
     ) {
         LevelTwoMainScreenHeader(count, navController)
-        Questions(count,showBtn)
-        if(showBtn.value) ТextLevelButton(showBtn, navController)
+        Questions(count,showBtn, items)
+        if(showBtn.value) ТextLevelButton(showBtn, navController, skillsVIewModel, items)
 
     }
 }
 
 @Composable
-fun ТextLevelButton(showBtn: MutableState<Boolean>, navController: NavHostController) {
+fun ТextLevelButton(
+    showBtn: MutableState<Boolean>,
+    navController: NavHostController,
+    skillsVIewModel: SkillsVIewModel,
+    items:  MutableState<List<LevelTwoQuestion>?>
+) {
     if(showBtn.value) {
         Row {
             OutlinedButton(
                 onClick = {
+
+                    skillsVIewModel.selectSkills(Token ?: "", items.value!!.map{ it.id })
                     navController.navigate("${Nav.LevelsLoad.route}/3")
                 },
                 shape = shape,
@@ -166,38 +199,32 @@ fun LevelTwoMainScreenHeader(
 @Composable
 fun Questions(
     count: MutableState<Int>,
-//    navController: NavHostController,
-    showBtn: MutableState<Boolean>
-
+    showBtn: MutableState<Boolean>,
+    items:  MutableState<List<LevelTwoQuestion>?>
 ){
 
-    var items by remember {
-        mutableStateOf(
-            LevelTwoQuestions().questions
-        )
-    }
 
     LazyColumn(
 
         modifier =  if(showBtn.value) {Modifier.height(700.dp)} else {Modifier.fillMaxHeight()}
     ) {
 
-        items(items.size + 1) { i ->
+        items(items.value!!.size) { i ->
 
-            if(i < items.size){
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 2.dp)
                         .border(
                             2.dp,
-                            if (items[i].isSelected) BorderTurquoise else BorderGray,
+                            if (items.value!![i].isSelected) BorderTurquoise else BorderGray,
                             shape = shape
                         )
                         .clip(shape)
-                        .background(if (items[i].isSelected) MainTurquoise else Color.White)
+                        .background(if (items.value!![i].isSelected) MainTurquoise else Color.White)
                         .clickable {
-                            items = items.mapIndexed { j, item ->
+                            items.value = items.value!!.mapIndexed { j, item ->
                                 if (i == j) {
                                     if(item.isSelected){
                                         count.value--
@@ -226,8 +253,8 @@ fun Questions(
                         Text(
                             modifier = Modifier
                                 .padding(all = 8.dp),
-                            text = items[i].question,
-                            color = if (items[i].isSelected) White else DarkTextColor,
+                            text = items.value!![i].question,
+                            color = if (items.value!![i].isSelected) White else DarkTextColor,
                             fontFamily = RalewayFontFamily,
                             fontWeight = FontWeight.Normal,
                             fontSize = 18.sp,
@@ -235,35 +262,8 @@ fun Questions(
                         )
                     }
                 }
-            }
-            else{
-                if(count.value >= 5){
-//                    Row {
-//                        OutlinedButton(
-//                            onClick = {
-//                                navController.navigate("${Nav.LevelsLoad.route}/3")
-//                            },
-//                            shape = shape,
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(end = 10.dp, start = 10.dp)
-//                                .border(1.dp, BorderTurquoise, shape = shape),
-//                            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MainTurquoise),
-//                            contentPadding = PaddingValues(8.dp)
-//                        ) {
-//                            Text(
-//                                modifier = Modifier,
-//                                text = "Закончить",
-//                                color = Color.White,
-//                                fontFamily = RalewayFontFamily,
-//                                fontWeight = FontWeight.Bold,
-//                                fontSize = 24.sp,
-//                                textAlign = TextAlign.Center
-//                            )
-//                        }
-//                    }
-                }
-            }
+
+
         }
     }
 }

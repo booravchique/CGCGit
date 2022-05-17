@@ -25,15 +25,15 @@ interface ApiServ {
     @GET("Answer/GetMyAnswers")
        suspend fun getMyAnswers(@Header("token")token:String):GetMyAnswers
     @POST("Skill/SelectSKills")
-       suspend fun postSelectSkills(@Header("token")token:String,@Body listSkills:MutableList<Int> ):SelectSkills
-    @GET("Skill/GetMySelectSKills")
+       suspend fun postSelectSkills(@Header("token")token:String,@Body listSkills:List<Int> ):SelectSkills
+    @GET("Skill/GetMySelectSKill")
        suspend fun getMySelectSkills(@Header("token")token:String):GetMySelectSkills
     @GET("Skill/GetAllSkills")
-       suspend fun getAllSkills():GetAllSkills
+       suspend fun getAllSkills(@Header("token")token:String):GetAllSkills
     @GET("Profession/GetTopProfession")
-       suspend fun getTopProfession():GetTopProfession
+       suspend fun getTopProfession(@Header("token")token:String):GetTopProfession
     @GET("User/Get")
-       suspend fun getUser(token: String):GetUser
+       suspend fun getUser(@Header("token")token: String):GetUser
 
 
 }

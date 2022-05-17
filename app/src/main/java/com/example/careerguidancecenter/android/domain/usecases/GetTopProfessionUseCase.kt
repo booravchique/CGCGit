@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetTopProfessionUseCase
     @Inject constructor(
        private val repository: GetTopProfessionRepository){
-        suspend fun execute():Resource<GetTopProfession>{
-            return repository.getTopProfessionRep()
+        suspend fun execute(token: String):Resource<GetTopProfession>{
+            return repository.getTopProfessionRep(token)
         }
 }

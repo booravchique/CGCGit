@@ -56,7 +56,6 @@ fun LevelOneMainScreenLayout(
             questionsViewModel.questions
         )
     }
-    questionsViewModel.getQuestions(Token ?: "")
 
 
     var answers by remember {

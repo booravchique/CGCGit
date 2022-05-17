@@ -9,7 +9,7 @@ class SelectSkillsUseCase
     @Inject constructor(
     private val repository: SelectSkillsRepository
 ) {
-    suspend fun execute(token:String,listSkills:MutableList<Int>):Resource<SelectSkills>{
+    suspend fun execute(token:String,listSkills:List<Int>):Resource<SelectSkills>{
         return repository.selectSkills(token,listSkills)
     }
 }

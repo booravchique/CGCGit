@@ -16,10 +16,10 @@ class GetTopProfessionRepositoryImpl
         private val gson: Gson,
         @IoDispatcher private val dispatcher: CoroutineDispatcher
     ):GetTopProfessionRepository{
-    override suspend fun getTopProfessionRep(): Resource<GetTopProfession> {
+    override suspend fun getTopProfessionRep(token: String): Resource<GetTopProfession> {
        return withContext(dispatcher){
             try {
-                val result = storage.getTopProfession()
+                val result = storage.getTopProfession(token)
                 if (result.success){
                     Resource.Success(result)
                 }

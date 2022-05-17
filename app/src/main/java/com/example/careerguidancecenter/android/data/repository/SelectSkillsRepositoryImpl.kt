@@ -16,7 +16,7 @@ class SelectSkillsRepositoryImpl
         private val gson: Gson,
         @IoDispatcher private val dispatcher: CoroutineDispatcher
 ):SelectSkillsRepository {
-    override suspend fun selectSkills(token: String, skillsList: MutableList<Int>): Resource<SelectSkills> {
+    override suspend fun selectSkills(token: String, skillsList: List<Int>): Resource<SelectSkills> {
         return withContext(dispatcher){
             try {
                 val result = storage.selectSkills(token=token,skillsList)
