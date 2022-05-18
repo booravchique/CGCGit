@@ -27,7 +27,7 @@ interface ApiServ {
        suspend fun getMyAnswers(@Header("token")token:String):GetMyAnswers
     @POST("Skill/SelectSKills")
        suspend fun postSelectSkills(@Header("token")token:String,@Body listSkills:List<Int> ):SelectSkills
-    @GET("Skill/GetMySelectSKills")
+    @GET("Skill/GetMySelectSKill")
        suspend fun getMySelectSkills(@Header("token")token:String):GetMySelectSkills
     @GET("Skill/GetAllSkills")
        suspend fun getAllSkills(@Header("token")token:String):GetAllSkills
